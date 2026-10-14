@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataCenterFacility",
+  "type": "object",
+  "required": ["id", "name", "operator", "state", "city", "coordinates", "facilityType", "status", "verificationTier"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "operator": { "type": "string" },
+    "state": { "type": "string" },
+    "city": { "type": "string" },
+    "address": { "type": "string" },
+    "coordinates": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "facilityType": {
+      "type": "string",
+      "enum": ["Hyperscale", "Colocation", "Edge", "Enterprise"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Operational", "Under Construction", "Planned"]
+    },
+    "reportedCapacityMW": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "reportedRacks": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "sourceTitle": { "type": "string" },
+    "sourceUrl": { "type": "string" },
+    "verificationTier": {
+      "type": "string",
+      "enum": ["verified_public_record", "illustrative_demo_data"]
+    },
+    "notes": { "type": "string" }
+  }
+}

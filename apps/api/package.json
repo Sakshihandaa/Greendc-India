@@ -1,0 +1,16 @@
+{
+  "name": "@greendc/api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Express REST API for GreenDC India sustainability analytics",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test tests/**/*.test.js"
+  },
+  "dependencies": {
+    "@greendc/calculator": "*",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

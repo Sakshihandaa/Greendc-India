@@ -1,0 +1,320 @@
+{
+  "metadata": {
+    "title": "Curated Public Data Centre Facilities in India",
+    "version": "1.0.0",
+    "lastUpdated": "2026-10-14",
+    "license": "Open Data Commons / Research Reference",
+    "coverageNotice": "Dataset incomplete: Curated subset of major hyperscale and enterprise facilities from verified public announcements, corporate filings, and industry registries. It is not an exhaustive census of all data centres across India.",
+    "statusDefinitions": {
+      "Operational": "Facility is live and actively delivering commissioned power to IT payloads.",
+      "Under Construction": "Civil structure or MEP fit-out in progress with published target commissioning dates.",
+      "Planned": "Land acquired or official MoUs signed with state governments; site not yet commissioned."
+    }
+  },
+  "facilities": [
+    {
+      "id": "yotta-nm1",
+      "name": "Yotta NM1 (Panvel Campus)",
+      "operator": "Yotta Infrastructure (Hiranandani Group)",
+      "state": "Maharashtra",
+      "city": "Navi Mumbai",
+      "address": "Integrated Yotta Data Center Park, Hiranandani Fortune City, Panvel, Navi Mumbai 410221",
+      "coordinates": [18.9894, 73.1175],
+      "facilityType": "Hyperscale",
+      "status": "Operational",
+      "reportedCapacityMW": 50,
+      "reportedRacks": 7200,
+      "sourceTitle": "Yotta NM1 Uptime Institute Tier IV Certification & Public Launch",
+      "sourceUrl": "https://yotta.com",
+      "verificationTier": "verified_public_record",
+      "notes": "First building in the planned 5-building, 250 MW campus. Operational since July 2020."
+    },
+    {
+      "id": "yotta-d1",
+      "name": "Yotta D1 (Greater Noida)",
+      "operator": "Yotta Infrastructure",
+      "state": "Uttar Pradesh",
+      "city": "Greater Noida",
+      "address": "Plot No 7, Tusiana Village, Knowledge Park V, Greater Noida 201301",
+      "coordinates": [28.5355, 77.4810],
+      "facilityType": "Hyperscale",
+      "status": "Operational",
+      "reportedCapacityMW": 28.8,
+      "reportedRacks": 5000,
+      "sourceTitle": "Yotta D1 North India Hyperscale Launch Announcement (Oct 2022)",
+      "sourceUrl": "https://yotta.com",
+      "verificationTier": "verified_public_record",
+      "notes": "First of 6 buildings planned on the 20-acre Greater Noida campus (160 MW total IT power planned)."
+    },
+    {
+      "id": "ctrls-mumbai-dc2",
+      "name": "CtrlS Mumbai DC-2 (Mahape)",
+      "operator": "CtrlS Datacenters Ltd",
+      "state": "Maharashtra",
+      "city": "Navi Mumbai",
+      "address": "TTC Industrial Area, MIDC, Mahape, Navi Mumbai 400710",
+      "coordinates": [19.1136, 73.0135],
+      "facilityType": "Hyperscale",
+      "status": "Operational",
+      "reportedCapacityMW": 30,
+      "reportedRacks": 4000,
+      "sourceTitle": "CtrlS Mumbai Facilities Disclosures",
+      "sourceUrl": "https://ctrls.in",
+      "verificationTier": "verified_public_record",
+      "notes": "Rated Tier-4 datacenter facility in TTC Industrial corridor."
+    },
+    {
+      "id": "ctrls-hyd-dc1",
+      "name": "CtrlS Hyderabad DC-1 (HITEC City)",
+      "operator": "CtrlS Datacenters Ltd",
+      "state": "Telangana",
+      "city": "Hyderabad",
+      "address": "HITEC City Phase II, Madhapur, Hyderabad 500081",
+      "coordinates": [17.4474, 78.3762],
+      "facilityType": "Colocation",
+      "status": "Operational",
+      "reportedCapacityMW": 20,
+      "reportedRacks": 2800,
+      "sourceTitle": "CtrlS Hyderabad Campus Overview",
+      "sourceUrl": "https://ctrls.in",
+      "verificationTier": "verified_public_record",
+      "notes": "Flagship operational colocation facility in Telangana's IT corridor."
+    },
+    {
+      "id": "ctrls-blr-dc1",
+      "name": "CtrlS Bengaluru DC-1",
+      "operator": "CtrlS Datacenters Ltd",
+      "state": "Karnataka",
+      "city": "Bengaluru",
+      "address": "Electronics City Phase 1, Bengaluru 560100",
+      "coordinates": [12.8452, 77.6602],
+      "facilityType": "Colocation",
+      "status": "Operational",
+      "reportedCapacityMW": 15,
+      "reportedRacks": 2000,
+      "sourceTitle": "CtrlS Bengaluru Site Specifications",
+      "sourceUrl": "https://ctrls.in",
+      "verificationTier": "verified_public_record",
+      "notes": "Tier-4 datacenter in Electronics City cluster."
+    },
+    {
+      "id": "adaniconnex-che1",
+      "name": "AdaniConneX Chennai 1",
+      "operator": "AdaniConneX (Adani Enterprises & EdgeConneX)",
+      "state": "Tamil Nadu",
+      "city": "Chennai",
+      "address": "SIPCOT IT Park, Siruseri, Chennai 603103",
+      "coordinates": [12.8258, 80.2185],
+      "facilityType": "Hyperscale",
+      "status": "Operational",
+      "reportedCapacityMW": 33,
+      "reportedRacks": 4500,
+      "sourceTitle": "AdaniConneX Chennai Phase 1 Launch Announcement (Nov 2022)",
+      "sourceUrl": "https://adaniconnex.com",
+      "verificationTier": "verified_public_record",
+      "notes": "Phase 1 operational of an ultimate 100 MW campus."
+    },
+    {
+      "id": "adaniconnex-noida1",
+      "name": "AdaniConneX Noida 1",
+      "operator": "AdaniConneX",
+      "state": "Uttar Pradesh",
+      "city": "Noida",
+      "address": "Sector 62, Noida 201309",
+      "coordinates": [28.6279, 77.3649],
+      "facilityType": "Hyperscale",
+      "status": "Under Construction",
+      "reportedCapacityMW": 50,
+      "reportedRacks": null,
+      "sourceTitle": "AdaniConneX Regional Project Pipeline Release",
+      "sourceUrl": "https://adaniconnex.com",
+      "verificationTier": "verified_public_record",
+      "notes": "Major hyperscale campus under construction to serve NCR enterprise and cloud workloads."
+    },
+    {
+      "id": "ntt-mumbai7",
+      "name": "NTT Mumbai 7 (Chandivali)",
+      "operator": "NTT Global Data Centers India",
+      "state": "Maharashtra",
+      "city": "Mumbai",
+      "address": "Chandivali Farm Road, Andheri East, Mumbai 400072",
+      "coordinates": [19.1122, 72.8944],
+      "facilityType": "Hyperscale",
+      "status": "Operational",
+      "reportedCapacityMW": 25,
+      "reportedRacks": 3500,
+      "sourceTitle": "NTT GDC India Facilities Overview",
+      "sourceUrl": "https://services.global.ntt",
+      "verificationTier": "verified_public_record",
+      "notes": "Flagship building in NTT's Chandivali campus (largest single data centre campus in Mumbai)."
+    },
+    {
+      "id": "equinix-mb2",
+      "name": "Equinix MB2 Mumbai",
+      "operator": "Equinix India",
+      "state": "Maharashtra",
+      "city": "Mumbai",
+      "address": "Chandivali, Kurla (W), Mumbai 400072",
+      "coordinates": [19.1105, 72.8910],
+      "facilityType": "Colocation",
+      "status": "Operational",
+      "reportedCapacityMW": 12,
+      "reportedRacks": 1900,
+      "sourceTitle": "Equinix International Business Exchange (IBX) MB2 Data Sheet",
+      "sourceUrl": "https://equinix.com",
+      "verificationTier": "verified_public_record",
+      "notes": "Acquired via GPX India; major network and cloud peering hub in India."
+    },
+    {
+      "id": "sify-rabale",
+      "name": "Sify Infinit Spaces Rabale DC",
+      "operator": "Sify Technologies",
+      "state": "Maharashtra",
+      "city": "Navi Mumbai",
+      "address": "TTC Industrial Area, Rabale, Navi Mumbai 400701",
+      "coordinates": [19.1350, 73.0030],
+      "facilityType": "Colocation",
+      "status": "Operational",
+      "reportedCapacityMW": 38,
+      "reportedRacks": 4200,
+      "sourceTitle": "Sify Green Data Center Disclosures",
+      "sourceUrl": "https://sifytechnologies.com",
+      "verificationTier": "verified_public_record",
+      "notes": "Includes solar/wind power purchase agreements through open access."
+    },
+    {
+      "id": "yotta-g1",
+      "name": "Yotta G1 (GIFT City)",
+      "operator": "Yotta Infrastructure",
+      "state": "Gujarat",
+      "city": "Gandhinagar",
+      "address": "GIFT City SEZ, Gandhinagar 382355",
+      "coordinates": [23.1610, 72.6840],
+      "facilityType": "Hyperscale",
+      "status": "Under Construction",
+      "reportedCapacityMW": 15,
+      "reportedRacks": 2000,
+      "sourceTitle": "Vibrant Gujarat Global Summit MoU & Launch Briefing (Jan 2024)",
+      "sourceUrl": "https://yotta.com",
+      "verificationTier": "verified_public_record",
+      "notes": "Designed for international financial services, low-latency trading, and AI compute."
+    },
+    {
+      "id": "yotta-guwahati",
+      "name": "Yotta Northeast Edge DC (Guwahati)",
+      "operator": "Yotta Infrastructure",
+      "state": "Assam",
+      "city": "Guwahati",
+      "address": "Tech City, Bongora, Guwahati 781015",
+      "coordinates": [26.1158, 91.5868],
+      "facilityType": "Edge",
+      "status": "Planned",
+      "reportedCapacityMW": 6,
+      "reportedRacks": 800,
+      "sourceTitle": "Advantage Assam Infrastructure Summit Announcements",
+      "sourceUrl": "https://yotta.com",
+      "verificationTier": "verified_public_record",
+      "notes": "Planned regional edge facility to serve North-East states and digital connectivity corridor."
+    }
+  ],
+  "stateSummaries": {
+    "Maharashtra": {
+      "facilityCount": 5,
+      "statusBreakdown": { "Operational": 5, "Under Construction": 0, "Planned": 0 },
+      "knownCapacityMW": 155,
+      "dataCoverage": "verified_partial",
+      "gridContext": {
+        "installedRECapacityMW": "30,120 MW (CEA 2024 installed capacity, all renewables)",
+        "reShareProxy": "34.8% of state generation capacity",
+        "powerSource": "Central Electricity Authority (CEA) Executive Summary 2024",
+        "waterStress": "High in interior Marathwada/Vidarbha; Coastal Konkan/Mumbai faces urban municipal rationing during summer",
+        "waterSource": "NITI Aayog Composite Water Management Index (CWMI)"
+      },
+      "notes": "India's largest datacenter concentration, centered on Navi Mumbai (Panvel, Airoli, Rabale, Mahape) and Chandivali."
+    },
+    "Uttar Pradesh": {
+      "facilityCount": 2,
+      "statusBreakdown": { "Operational": 1, "Under Construction": 1, "Planned": 0 },
+      "knownCapacityMW": 78.8,
+      "dataCoverage": "verified_partial",
+      "gridContext": {
+        "installedRECapacityMW": "11,850 MW (CEA 2024)",
+        "reShareProxy": "18.2% of state generation capacity",
+        "powerSource": "CEA Monthly Renewable Generation Report 2024",
+        "waterStress": "Critical in western Yamuna basin; groundwater over-extracted in parts of Noida/Greater Noida",
+        "waterSource": "Central Ground Water Board (CGWB) Dynamic Ground Water Resources 2023"
+      },
+      "notes": "Rapidly growing hub around Noida and Greater Noida under UP Data Center Policy 2021."
+    },
+    "Tamil Nadu": {
+      "facilityCount": 1,
+      "statusBreakdown": { "Operational": 1, "Under Construction": 0, "Planned": 0 },
+      "knownCapacityMW": 33,
+      "dataCoverage": "verified_partial",
+      "gridContext": {
+        "installedRECapacityMW": "22,400 MW (CEA 2024)",
+        "reShareProxy": "49.1% of state generation capacity (high wind and solar penetration)",
+        "powerSource": "CEA Installed Capacity Report 2024",
+        "waterStress": "Extremely high summer stress; desalination and tertiary treated water mandated for large industrial parks",
+        "waterSource": "NITI Aayog CWMI & CGWB 2023"
+      },
+      "notes": "Chennai is the primary subsea cable landing hub on India's eastern seaboard (Siruseri, Ambattur)."
+    },
+    "Telangana": {
+      "facilityCount": 1,
+      "statusBreakdown": { "Operational": 1, "Under Construction": 0, "Planned": 0 },
+      "knownCapacityMW": 20,
+      "dataCoverage": "verified_partial",
+      "gridContext": {
+        "installedRECapacityMW": "6,150 MW (CEA 2024)",
+        "reShareProxy": "28.5% of state generation capacity",
+        "powerSource": "CEA Renewable Executive Summary 2024",
+        "waterStress": "Semi-arid plateau; heavily reliant on Godavari/Krishna lift irrigation water supply networks",
+        "waterSource": "Telangana State Ground Water Department Annual Report 2023"
+      },
+      "notes": "Key inland datacenter hub with low seismic activity; major presence in Madhapur and Gachibowli."
+    },
+    "Karnataka": {
+      "facilityCount": 1,
+      "statusBreakdown": { "Operational": 1, "Under Construction": 0, "Planned": 0 },
+      "knownCapacityMW": 15,
+      "dataCoverage": "verified_partial",
+      "gridContext": {
+        "installedRECapacityMW": "17,800 MW (CEA 2024)",
+        "reShareProxy": "52.3% of state generation capacity (leading solar/wind producer)",
+        "powerSource": "CEA State-wise Installed Capacity 2024",
+        "waterStress": "Bengaluru metropolitan area experiences severe groundwater depletion and Cauvery water allocation limits",
+        "waterSource": "CGWB Karnataka Ground Water Profile"
+      },
+      "notes": "Enterprise hub focused on IT and R&D computing (Whitefield, Electronics City, Devanahalli)."
+    },
+    "Gujarat": {
+      "facilityCount": 1,
+      "statusBreakdown": { "Operational": 0, "Under Construction": 1, "Planned": 0 },
+      "knownCapacityMW": 15,
+      "dataCoverage": "verified_partial",
+      "gridContext": {
+        "installedRECapacityMW": "26,500 MW (CEA 2024)",
+        "reShareProxy": "47.6% of state generation capacity (leading solar/wind corridor in Kutch)",
+        "powerSource": "CEA Renewable Report 2024",
+        "waterStress": "Arid to semi-arid; GIFT City utilizes Narmada canal treated utility grid",
+        "waterSource": "NITI Aayog CWMI"
+      },
+      "notes": "Emerging hub for international financial data, subsea connectivity, and green power open-access."
+    },
+    "Assam": {
+      "facilityCount": 1,
+      "statusBreakdown": { "Operational": 0, "Under Construction": 0, "Planned": 1 },
+      "knownCapacityMW": 6,
+      "dataCoverage": "verified_partial",
+      "gridContext": {
+        "installedRECapacityMW": "780 MW (CEA 2024)",
+        "reShareProxy": "12.4% of state capacity (primarily small hydro)",
+        "powerSource": "CEA North Eastern Region Power Report 2024",
+        "waterStress": "Low annual scarcity (Brahmaputra basin), but high flood risk during monsoon season",
+        "waterSource": "Central Water Commission (CWC) Basin Overview"
+      },
+      "notes": "Pioneering regional edge facility for North-Eastern digital connectivity corridor."
+    }
+  }
+}

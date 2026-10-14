@@ -1,0 +1,31 @@
+{
+  "name": "greendc-india",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AI-powered sustainability analysis and location intelligence platform for data centres in India",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "node --test packages/calculator/tests/**/*.test.js apps/api/tests/**/*.test.js",
+    "test:calculator": "node --test packages/calculator/tests/**/*.test.js",
+    "test:api": "node --test apps/api/tests/**/*.test.js",
+    "start:api": "node apps/api/src/server.js",
+    "dev:web": "npm --workspace=@greendc/web run dev",
+    "build:web": "npm --workspace=@greendc/web run build",
+    "build": "npm --workspace=@greendc/web run build"
+  },
+  "keywords": [
+    "sustainability",
+    "data-center",
+    "energy",
+    "water",
+    "india",
+    "pue",
+    "wue"
+  ],
+  "author": "",
+  "license": "MIT"
+}

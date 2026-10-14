@@ -1,0 +1,22 @@
+{
+  "name": "@greendc/calculator",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Deterministic calculation engine for GreenDC India sustainability metrics",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "test": "node --test tests/**/*.test.js"
+  },
+  "keywords": [
+    "data-center",
+    "pue",
+    "wue",
+    "energy-calculator",
+    "sustainability"
+  ],
+  "author": "",
+  "license": "MIT"
+}
