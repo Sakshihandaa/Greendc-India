@@ -1,22 +1,57 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { Search, RotateCcw, Filter, MapPin, Building2, Zap, CheckCircle2, Clock, CalendarClock, ExternalLink } from 'lucide-react';
+import {
+  Search,
+  RotateCcw,
+  Filter,
+  MapPin,
+  Building2,
+  Zap,
+  CheckCircle2,
+  Clock,
+  Layers,
+  ExternalLink,
+  Navigation,
+  Compass,
+  ArrowRight,
+  Boxes,
+  Map as MapIcon,
+  Eye,
+  Camera,
+  Wind
+} from 'lucide-react';
 import indiaStatesGeo from '../data/indiaStatesGeo.json';
 import { FACILITIES, STATE_SUMMARIES } from '../data/facilitiesData';
 import StateDetailPanel from './StateDetailPanel';
+import India3DCanvas, { CAMERA_PRESETS } from './India3DCanvas';
 
-// Custom Map Controller to handle programmatic pan and zoom
-function MapController({ selectedState, geoJsonData }) {
+// Key Indian Data Center Hubs for quick navigation
+const DC_HUBS = [
+  { name: 'All India', coords: [22.5, 82.0], zoom: 5, cam3D: 'overview' },
+  { name: 'Mumbai MMR', coords: [19.0760, 73.0135], zoom: 10, state: 'Maharashtra', cam3D: 'mumbai' },
+  { name: 'Delhi-NCR', coords: [28.5355, 77.3910], zoom: 10, state: 'Uttar Pradesh', cam3D: 'ncr' },
+  { name: 'Bengaluru', coords: [12.8452, 77.6602], zoom: 11, state: 'Karnataka', cam3D: 'south' },
+  { name: 'Hyderabad', coords: [17.4474, 78.3762], zoom: 11, state: 'Telangana', cam3D: 'south' },
+  { name: 'Chennai', coords: [12.8258, 80.2185], zoom: 11, state: 'Tamil Nadu', cam3D: 'south' },
+  { name: 'GIFT City', coords: [23.1610, 72.6840], zoom: 11, state: 'Gujarat', cam3D: 'gujarat' },
+  { name: 'Guwahati', coords: [26.1158, 91.5868], zoom: 10, state: 'Assam', cam3D: 'overview' }
+];
+
+function MapController({ targetCenter, targetZoom, selectedState, geoJsonData }) {
   const map = useMap();
 
   useEffect(() => {
-    if (!selectedState) {
-      map.setView([22.5, 82.0], 5);
+    if (targetCenter && targetZoom) {
+      map.flyTo(targetCenter, targetZoom, { duration: 1.2, easeLinearity: 0.25 });
       return;
     }
 
-    // Find the feature for the selected state and zoom to bounds
+    if (!selectedState) {
+      map.flyTo([22.5, 82.0], 5, { duration: 1.2 });
+      return;
+    }
+
     const feature = geoJsonData.features.find(
       (f) => f.properties.name.toLowerCase() === selectedState.toLowerCase()
     );
@@ -27,51 +62,27 @@ function MapController({ selectedState, geoJsonData }) {
         const bounds = layer.getBounds();
         map.fitBounds(bounds, { padding: [40, 40], maxZoom: 7, animate: true });
       } catch (e) {
-        console.error('Error fitting bounds for state:', selectedState, e);
+        console.error('Error fitting bounds:', e);
       }
     }
-  }, [selectedState, geoJsonData, map]);
+  }, [targetCenter, targetZoom, selectedState, geoJsonData, map]);
 
   return null;
 }
 
-// Marker icon generator using clean SVG/CSS
+// Custom Marker generator with green glowing animations
 function getFacilityMarkerIcon(status) {
   const isOp = status === 'Operational';
   const isUc = status === 'Under Construction';
-  const color = isOp ? '#10b981' : isUc ? '#f59e0b' : '#94a3b8';
-  const glow = isOp ? 'rgba(16, 185, 129, 0.4)' : isUc ? 'rgba(245, 158, 11, 0.4)' : 'rgba(148, 163, 184, 0.3)';
+  const color = isOp ? '#059669' : isUc ? '#d97706' : '#64748b';
+  const glow = isOp ? 'rgba(5, 150, 105, 0.4)' : isUc ? 'rgba(217, 119, 6, 0.4)' : 'rgba(100, 116, 139, 0.3)';
 
   return L.divIcon({
     className: 'facility-marker-div',
     html: `
-      <div style="
-        position: relative;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      ">
-        <div style="
-          position: absolute;
-          width: 22px;
-          height: 22px;
-          border-radius: 50%;
-          background: ${color};
-          opacity: 0.35;
-          animation: ${isOp ? 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite' : 'none'};
-        "></div>
-        <div style="
-          position: relative;
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background: ${color};
-          border: 2px solid #090d16;
-          box-shadow: 0 0 12px ${glow};
-        "></div>
+      <div style="position: relative; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <div style="position: absolute; width: 24px; height: 24px; border-radius: 50%; background: ${color}; opacity: 0.25; animation: ${isOp ? 'ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite' : 'none'};"></div>
+        <div style="position: relative; width: 14px; height: 14px; border-radius: 50%; background: ${color}; border: 2.5px solid #ffffff; box-shadow: 0 2px 10px ${glow};"></div>
       </div>
     `,
     iconSize: [30, 30],
@@ -80,359 +91,354 @@ function getFacilityMarkerIcon(status) {
   });
 }
 
-export default function IndiaMap({ onSelectStateFromOutside }) {
-  const [selectedState, setSelectedState] = useState(null);
-  const [typeFilter, setTypeFilter] = useState('All'); // All, Hyperscale, Colocation, Edge
-  const [statusFilter, setStatusFilter] = useState('All'); // All, Operational, Under Construction, Planned
+export default function IndiaMap({ onNavigateToSimulatorWithFacility, preselectedFacility }) {
+  const [viewMode, setViewMode] = useState('3d');
+  const [activeCam3D, setActiveCam3D] = useState('overview');
+  const [selectedState, setSelectedState] = useState(preselectedFacility ? preselectedFacility.state : null);
+  const [typeFilter, setTypeFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [hoveredState, setHoveredState] = useState(null);
+  const [activeHub, setActiveHub] = useState('All India');
+  const [targetView, setTargetView] = useState({ center: [22.5, 82.0], zoom: 5 });
 
   const geoJsonRef = useRef(null);
 
-  // Filtered facilities list
+  useEffect(() => {
+    if (preselectedFacility) {
+      setTargetView({
+        center: preselectedFacility.coordinates,
+        zoom: 11
+      });
+      setSelectedState(preselectedFacility.state);
+    }
+  }, [preselectedFacility]);
+
   const filteredFacilities = useMemo(() => {
     return FACILITIES.filter((fac) => {
+      const matchSearch = !searchQuery ||
+        fac.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        fac.operator.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        fac.city.toLowerCase().includes(searchQuery.toLowerCase());
       const matchType = typeFilter === 'All' || fac.facilityType === typeFilter;
       const matchStatus = statusFilter === 'All' || fac.status === statusFilter;
       const matchState = !selectedState || fac.state.toLowerCase() === selectedState.toLowerCase();
-      return matchType && matchStatus && matchState;
+      return matchSearch && matchType && matchStatus && matchState;
     });
-  }, [typeFilter, statusFilter, selectedState]);
+  }, [searchQuery, typeFilter, statusFilter, selectedState]);
 
-  // List of all unique state names for search dropdown
-  const allStateNames = useMemo(() => {
-    return indiaStatesGeo.features
-      .map((f) => f.properties.name)
-      .sort((a, b) => a.localeCompare(b));
-  }, []);
-
-  // Filtered state names for search autocomplete
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    return allStateNames.filter((name) =>
-      name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, allStateNames]);
-
-  // Handle State Selection
-  const handleSelectState = (stateName) => {
-    setSelectedState(stateName);
-    setSearchQuery('');
-    if (onSelectStateFromOutside) onSelectStateFromOutside(stateName);
+  const handleHubClick = (hub) => {
+    setActiveHub(hub.name);
+    setTargetView({ center: hub.coords, zoom: hub.zoom });
+    if (hub.cam3D) {
+      setActiveCam3D(hub.cam3D);
+    }
+    if (hub.state) {
+      setSelectedState(hub.state);
+    } else {
+      setSelectedState(null);
+    }
   };
 
-  const handleReset = () => {
-    setSelectedState(null);
-    setTypeFilter('All');
-    setStatusFilter('All');
-    setSearchQuery('');
-  };
-
-  // GeoJSON styling logic
+  // State Polygon Styles (Light & Green)
   const getFeatureStyle = (feature) => {
     const stateName = feature.properties.name;
-    const isSelected = selectedState && selectedState.toLowerCase() === stateName.toLowerCase();
-    const isHovered = hoveredState && hoveredState.toLowerCase() === stateName.toLowerCase();
-    const hasFacilities = Boolean(STATE_SUMMARIES[stateName]);
-
-    if (isSelected) {
-      return {
-        fillColor: '#059669',
-        fillOpacity: 0.45,
-        color: '#34d399',
-        weight: 2.5,
-        dashArray: ''
-      };
-    }
-
-    if (isHovered) {
-      return {
-        fillColor: hasFacilities ? '#10b981' : '#334155',
-        fillOpacity: hasFacilities ? 0.35 : 0.25,
-        color: '#6ee7b7',
-        weight: 1.8,
-        dashArray: ''
-      };
-    }
+    const isSelected = selectedState && stateName.toLowerCase() === selectedState.toLowerCase();
+    const hasData = STATE_SUMMARIES[stateName];
 
     return {
-      fillColor: hasFacilities ? '#064e3b' : '#0f172a',
-      fillOpacity: hasFacilities ? 0.25 : 0.08,
-      color: hasFacilities ? '#10b981' : '#334155',
-      weight: hasFacilities ? 1.2 : 0.8,
-      dashArray: hasFacilities ? '' : '3'
+      fillColor: isSelected ? '#10b981' : hasData ? '#86efac' : '#f1f5f9',
+      weight: isSelected ? 2.5 : 1,
+      opacity: 0.9,
+      color: isSelected ? '#047857' : '#059669',
+      fillOpacity: isSelected ? 0.45 : hasData ? 0.25 : 0.1,
+      dashArray: isSelected ? '' : '3'
     };
   };
 
-  // GeoJSON interaction callbacks
   const onEachFeature = (feature, layer) => {
     const stateName = feature.properties.name;
     const summary = STATE_SUMMARIES[stateName];
-    const count = summary ? summary.facilityCount : 0;
 
     layer.on({
-      mouseover: () => setHoveredState(stateName),
-      mouseout: () => setHoveredState(null),
-      click: () => handleSelectState(stateName)
+      click: () => {
+        setSelectedState(stateName);
+      },
+      mouseover: (e) => {
+        const l = e.target;
+        l.setStyle({
+          fillOpacity: 0.5,
+          weight: 2,
+          color: '#047857'
+        });
+      },
+      mouseout: (e) => {
+        if (geoJsonRef.current) {
+          geoJsonRef.current.resetStyle(e.target);
+        }
+      }
     });
 
-    layer.bindTooltip(
-      `<div class="text-xs font-sans">
-        <strong class="text-white">${stateName}</strong>
-        <div class="text-slate-300 text-[10px] mt-0.5">
-          ${count > 0 ? `${count} facility records` : 'No curated records'}
-        </div>
-      </div>`,
-      { sticky: true, className: 'leaflet-custom-tooltip' }
-    );
+    const tooltipContent = summary
+      ? `<strong>${stateName}</strong><br/>${summary.facilityCount} Campuses • ${summary.knownCapacityMW || 0} MW IT Load`
+      : `<strong>${stateName}</strong><br/>Baseline Coverage`;
+
+    layer.bindTooltip(tooltipContent, {
+      sticky: true,
+      className: 'bg-white text-slate-800 text-xs px-2.5 py-1.5 rounded-xl border border-emerald-300 shadow-md font-sans'
+    });
   };
 
   return (
-    <div className="space-y-4">
-      {/* Top Controls Bar */}
-      <div className="bg-slate-900/90 border border-slate-800 p-3.5 rounded-2xl shadow-xl backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
-        {/* Search & State Filter */}
-        <div className="relative flex-1 min-w-[240px] max-w-md">
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search Indian State or UT (e.g. Maharashtra, UP)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
-            />
+    <div className="space-y-6 animate-fadeIn text-slate-800">
+      {/* View Mode & Hubs Toolbar */}
+      <div className="eco-card p-4 sm:p-5 rounded-3xl border border-slate-200 bg-white space-y-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-700 uppercase tracking-widest font-bold">
+              <Compass className="w-4 h-4 text-emerald-600" /> Geospatial Siting Intelligence
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight font-heading mt-0.5">
+              India Geospatial & Environmental Explorer
+            </h2>
           </div>
 
-          {/* Autocomplete Dropdown */}
-          {searchResults.length > 0 && (
-            <div className="absolute left-0 right-0 mt-1.5 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-50 divide-y divide-slate-800/60">
-              {searchResults.map((name) => {
-                const count = STATE_SUMMARIES[name]?.facilityCount || 0;
-                return (
-                  <button
-                    key={name}
-                    onClick={() => handleSelectState(name)}
-                    className="w-full text-left px-3.5 py-2 text-xs hover:bg-slate-800/80 flex items-center justify-between transition"
+          {/* Mode Switcher */}
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-2xl border border-slate-200 self-start sm:self-auto">
+            <button
+              onClick={() => setViewMode('3d')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                viewMode === '3d'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-emerald-700'
+              }`}
+            >
+              <Boxes className="w-3.5 h-3.5" />
+              3D Spatial Hologram
+            </button>
+            <button
+              onClick={() => setViewMode('2d')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                viewMode === '2d'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-emerald-700'
+              }`}
+            >
+              <MapIcon className="w-3.5 h-3.5" />
+              2D Detailed GIS Map
+            </button>
+          </div>
+        </div>
+
+        {/* Focus Hubs Quick Navigation */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar pt-2 border-t border-slate-100">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 shrink-0 flex items-center gap-1 mr-1">
+            <Compass className="w-3 h-3 text-emerald-600" /> Focus Hub:
+          </span>
+          {DC_HUBS.map((hub) => (
+            <button
+              key={hub.name}
+              onClick={() => handleHubClick(hub)}
+              className={`text-[11px] px-2.5 py-1 rounded-xl whitespace-nowrap transition font-medium ${
+                activeHub === hub.name
+                  ? 'bg-emerald-600 text-white font-bold shadow-sm'
+                  : 'bg-slate-50 text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200'
+              }`}
+            >
+              {hub.name}
+            </button>
+          ))}
+        </div>
+
+        {/* 2D Filters & Search */}
+        {viewMode === '2d' && (
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs">
+            <div className="flex flex-wrap items-center gap-2 flex-1">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search campus or city..."
+                  className="bg-white border border-slate-200 text-xs text-slate-900 rounded-xl pl-8 pr-3 py-1.5 focus:outline-none focus:border-emerald-500 w-44 shadow-sm"
+                />
+              </div>
+
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="bg-white border border-slate-200 text-xs text-slate-700 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-emerald-500 shadow-sm"
+              >
+                <option value="All">All Types</option>
+                <option value="Hyperscale">Hyperscale</option>
+                <option value="Colocation">Colocation</option>
+                <option value="Edge">Edge</option>
+              </select>
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="bg-white border border-slate-200 text-xs text-slate-700 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-emerald-500 shadow-sm"
+              >
+                <option value="All">All Statuses</option>
+                <option value="Operational">Operational</option>
+                <option value="Under Construction">Under Construction</option>
+                <option value="Planned">Planned</option>
+              </select>
+
+              {selectedState && (
+                <button
+                  onClick={() => setSelectedState(null)}
+                  className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-xl flex items-center gap-1.5 hover:bg-emerald-100 transition font-semibold"
+                >
+                  <span>{selectedState}</span>
+                  <span className="text-emerald-700 font-bold">×</span>
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 text-slate-500 text-[11px] font-mono">
+              <span className="text-emerald-700 font-bold">{filteredFacilities.length} campuses visible</span>
+              <button
+                onClick={() => {
+                  setSelectedState(null);
+                  setSearchQuery('');
+                  setTypeFilter('All');
+                  setStatusFilter('All');
+                  handleHubClick(DC_HUBS[0]);
+                }}
+                className="p-1 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-900"
+                title="Reset View"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Main Viewport Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Map / 3D Canvas */}
+        <div className={`transition-all duration-300 ${selectedState ? 'lg:col-span-8' : 'lg:col-span-12'}`}>
+          {viewMode === '3d' ? (
+            <div className="space-y-3">
+              <India3DCanvas
+                activeCameraPreset={activeCam3D}
+                onCameraChange={(camId) => setActiveCam3D(camId)}
+                onSelectFacility={(fac) => {
+                  setSelectedState(fac.state);
+                }}
+                height="620px"
+                showControls={true}
+              />
+            </div>
+          ) : (
+            <div className="eco-card rounded-3xl border border-slate-200 overflow-hidden shadow-md relative h-[620px] bg-white">
+              <MapContainer
+                center={targetView.center}
+                zoom={targetView.zoom}
+                scrollWheelZoom={true}
+                className="w-full h-full"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+                  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                />
+
+                <MapController
+                  targetCenter={targetView.center}
+                  targetZoom={targetView.zoom}
+                  selectedState={selectedState}
+                  geoJsonData={indiaStatesGeo}
+                />
+
+                {/* State GeoJSON Polygons in Light Green */}
+                <GeoJSON
+                  ref={geoJsonRef}
+                  data={indiaStatesGeo}
+                  style={getFeatureStyle}
+                  onEachFeature={onEachFeature}
+                />
+
+                {/* Facility Markers */}
+                {filteredFacilities.map((fac) => (
+                  <Marker
+                    key={fac.id}
+                    position={fac.coordinates}
+                    icon={getFacilityMarkerIcon(fac.status)}
                   >
-                    <span className="text-slate-200 font-medium">{name}</span>
-                    <span className="text-[10px] text-slate-400">
-                      {count > 0 ? `${count} facilities` : 'No records'}
-                    </span>
-                  </button>
-                );
-              })}
+                    <Popup>
+                      <div className="space-y-2 text-slate-800 text-xs">
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-[10px] font-mono uppercase text-slate-500 font-bold">
+                            {fac.operator}
+                          </span>
+                          <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold ${
+                            fac.status === 'Operational' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                          }`}>
+                            {fac.status}
+                          </span>
+                        </div>
+
+                        <h4 className="text-xs font-bold text-slate-900 font-heading">
+                          {fac.name}
+                        </h4>
+
+                        <p className="text-[11px] text-slate-600">
+                          📍 {fac.city}, {fac.state}
+                        </p>
+
+                        <div className="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 p-2 rounded-xl border border-slate-200">
+                          <div>
+                            <span className="text-[10px] text-slate-500 block">IT Load</span>
+                            <span className="font-bold text-emerald-700 font-mono">
+                              {fac.reportedCapacityMW ? `${fac.reportedCapacityMW} MW` : 'Undisclosed'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-slate-500 block">Racks</span>
+                            <span className="font-bold text-slate-700 font-mono">
+                              {fac.reportedRacks ? fac.reportedRacks.toLocaleString() : '—'}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                          <button
+                            onClick={() => setSelectedState(fac.state)}
+                            className="text-slate-600 hover:text-slate-900 font-medium"
+                          >
+                            State Dossier
+                          </button>
+                          {onNavigateToSimulatorWithFacility && (
+                            <button
+                              onClick={() => onNavigateToSimulatorWithFacility(fac)}
+                              className="font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+                            >
+                              Simulate <ArrowRight className="w-3 h-3" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
             </div>
           )}
         </div>
 
-        {/* Type Filter Pills (Inspired by Yotta's All / Hyperscale / Edge selector) */}
-        <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider px-2 font-medium">Type:</span>
-          {['All', 'Hyperscale', 'Colocation', 'Edge'].map((type) => (
-            <button
-              key={type}
-              onClick={() => setTypeFilter(type)}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition ${
-                typeFilter === type
-                  ? 'bg-emerald-600 text-white font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {type}
-            </button>
-          ))}
-        </div>
-
-        {/* Status Filter Pills */}
-        <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider px-2 font-medium">Status:</span>
-          {['All', 'Operational', 'Under Construction', 'Planned'].map((status) => (
-            <button
-              key={status}
-              onClick={() => setStatusFilter(status)}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition ${
-                statusFilter === status
-                  ? 'bg-emerald-600 text-white font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {status}
-            </button>
-          ))}
-        </div>
-
-        {/* Reset View Button */}
-        {(selectedState || typeFilter !== 'All' || statusFilter !== 'All') && (
-          <button
-            onClick={handleReset}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition border border-slate-700/60"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            Reset Map
-          </button>
-        )}
-      </div>
-
-      {/* Main Map + Intelligence Panel Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* Map Container (takes 8 cols on large screen or 12 if no state selected) */}
-        <div
-          className={`${
-            selectedState ? 'lg:col-span-8' : 'lg:col-span-12'
-          } bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl relative transition-all duration-300`}
-          style={{ height: '720px' }}
-        >
-          {/* Active selection banner overlay */}
-          <div className="absolute top-4 left-4 z-[400] bg-slate-950/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-800 text-xs text-slate-200 shadow-xl flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-            {selectedState ? (
-              <span>
-                Exploring State: <strong className="text-emerald-400">{selectedState}</strong>
-              </span>
-            ) : (
-              <span>Click any Indian state or facility pin to inspect intelligence</span>
-            )}
-          </div>
-
-          {/* Floating Map Legend (Bottom Left) */}
-          <div className="absolute bottom-4 left-4 z-[400] bg-slate-950/90 backdrop-blur-md p-3 rounded-xl border border-slate-800 text-xs text-slate-300 shadow-xl space-y-1.5 max-w-xs">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
-              Facility Status & Boundaries
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-emerald-500 border border-slate-900 shadow-sm shadow-emerald-500/50"></span>
-              <span className="text-[11px] text-slate-200">Operational Hyperscale / DC</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-amber-500 border border-slate-900 shadow-sm shadow-amber-500/50"></span>
-              <span className="text-[11px] text-slate-200">Under Construction</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-slate-400 border border-slate-900"></span>
-              <span className="text-[11px] text-slate-200">Planned / Announced</span>
-            </div>
-            <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80">
-              <span className="w-3 h-3 rounded bg-emerald-950 border border-emerald-500/60"></span>
-              <span className="text-[10px] text-slate-400">States with Curated Records</span>
-            </div>
-          </div>
-
-          {/* Leaflet Map */}
-          <MapContainer
-            center={[22.5, 82.0]}
-            zoom={5}
-            minZoom={4}
-            maxZoom={10}
-            scrollWheelZoom={true}
-            className="w-full h-full dark-tiles"
-          >
-            {/* OpenStreetMap Tile Provider */}
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-
-            {/* Programmatic Zoom & Pan Controller */}
-            <MapController selectedState={selectedState} geoJsonData={indiaStatesGeo} />
-
-            {/* GeoJSON State Boundaries */}
-            <GeoJSON
-              ref={geoJsonRef}
-              data={indiaStatesGeo}
-              style={getFeatureStyle}
-              onEachFeature={onEachFeature}
-            />
-
-            {/* Facility Markers */}
-            {filteredFacilities.map((fac) => (
-              <Marker
-                key={fac.id}
-                position={fac.coordinates}
-                icon={getFacilityMarkerIcon(fac.status)}
-              >
-                <Popup>
-                  <div className="p-1 space-y-2">
-                    <div className="flex items-start justify-between gap-2 border-b border-slate-800 pb-1.5">
-                      <div>
-                        <h4 className="font-bold text-sm text-white">{fac.name}</h4>
-                        <p className="text-[11px] text-slate-400">{fac.operator}</p>
-                      </div>
-                      <span
-                        className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${
-                          fac.status === 'Operational'
-                            ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                            : fac.status === 'Under Construction'
-                            ? 'bg-amber-950 text-amber-400 border border-amber-800'
-                            : 'bg-slate-800 text-slate-300 border border-slate-700'
-                        }`}
-                      >
-                        {fac.status}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-slate-300">
-                      <strong>Location:</strong> {fac.city}, {fac.state}
-                    </p>
-
-                    <div className="flex items-center gap-3 text-xs text-slate-300 bg-slate-950/60 p-2 rounded-lg border border-slate-800">
-                      <div>
-                        <span className="text-[10px] text-slate-400 block">IT Power</span>
-                        <strong className="text-emerald-400">
-                          {fac.reportedCapacityMW ? `${fac.reportedCapacityMW} MW` : 'Undisclosed'}
-                        </strong>
-                      </div>
-                      {fac.reportedRacks && (
-                        <div>
-                          <span className="text-[10px] text-slate-400 block">Racks</span>
-                          <strong>{fac.reportedRacks.toLocaleString()}</strong>
-                        </div>
-                      )}
-                      <div>
-                        <span className="text-[10px] text-slate-400 block">Type</span>
-                        <strong>{fac.facilityType}</strong>
-                      </div>
-                    </div>
-
-                    <p className="text-[11px] text-slate-400 leading-snug">{fac.address}</p>
-
-                    <div className="pt-1.5 flex items-center justify-between border-t border-slate-800 text-[10px] text-slate-400">
-                      <span className="italic">{fac.verificationTier.replace(/_/g, ' ')}</span>
-                      {fac.sourceUrl && (
-                        <a
-                          href={fac.sourceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
-                        >
-                          Details <ExternalLink className="w-2.5 h-2.5" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        </div>
-
-        {/* State Detail Intelligence Panel */}
+        {/* State Detail Panel Drawer */}
         {selectedState && (
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 h-[620px]">
             <StateDetailPanel
               stateName={selectedState}
               onClose={() => setSelectedState(null)}
+              onNavigateToSimulatorWithFacility={onNavigateToSimulatorWithFacility}
             />
           </div>
         )}
-      </div>
-
-      {/* Map Disclaimer Footer */}
-      <div className="text-[11px] text-slate-500 bg-slate-900/60 border border-slate-800/60 p-3 rounded-xl flex items-start gap-2">
-        <Building2 className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-        <div>
-          <span className="font-semibold text-slate-400">Geospatial Data & Representation Notice:</span> State boundaries are derived from simplified open geographical data (OpenStreetMap / DataMeet) for responsive web rendering. Facility markers reflect publicly disclosed corporate campuses and do not claim to show every enterprise server room or captive telecom pop in India.
-        </div>
       </div>
     </div>
   );
