@@ -51,7 +51,8 @@ export default {
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-        display: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
+        display: ['Space Grotesk', 'Outfit', 'sans-serif'],
+        heading: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
       },
       boxShadow: {
         'glow-sm': '0 0 15px -3px rgba(16, 185, 129, 0.25)',

@@ -28,16 +28,16 @@ import {
   Flame,
   Thermometer,
   ShieldAlert,
-  ArrowUpRight
+  ArrowUpRight,
+  Activity
 } from 'lucide-react';
-import India3DCanvas, { CAMERA_PRESETS } from './India3DCanvas';
+import IndiaMapSVG from './IndiaMapSVG';
 import { getNationalStats } from '../data/facilitiesData';
 
-// 6 Automated Cinematic Video Photography Tour Scenes
+// 6 Automated Siting Corridor Scenes
 export const CINEMATIC_TOUR_SCENES = [
   {
     id: 'rajasthan',
-    preset: 'rajasthan',
     state: 'Rajasthan',
     badge: '☀️ Solar Power Capital',
     title: 'Thar Desert 2.24 GW Solar Corridor',
@@ -49,12 +49,11 @@ export const CINEMATIC_TOUR_SCENES = [
     tariff: '₹6.80 / kWh (Open Access Solar)',
     pueTarget: '1.24 – 1.30 PUE',
     description: 'Western Rajasthan offers India\'s premier solar insolation (DNI > 5.8 kWh/m²/day). However, hyper-arid desert conditions cause extreme groundwater depletion, mandating zero-water closed-loop dry economizers for all hyperscale AI facilities.',
-    policyHighlight: 'Rajasthan Solar Policy 2019: 100% Electricity Duty Exemption for 10 Years & Land Allotment Concessions.',
+    policyHighlight: 'Rajasthan Solar Policy: 100% Electricity Duty Exemption for 10 Years & Land Allotment Concessions.',
     humanImpact: 'Using closed-loop dry cooling preserves over 250 Million Litres of rural aquifer water annually.'
   },
   {
     id: 'gujarat',
-    preset: 'gujarat',
     state: 'Gujarat',
     badge: '⚡ 30 GW Mega-Hub',
     title: 'Khavda Renewable Frontier & GIFT City',
@@ -71,7 +70,6 @@ export const CINEMATIC_TOUR_SCENES = [
   },
   {
     id: 'mumbai',
-    preset: 'mumbai',
     state: 'Maharashtra',
     badge: '🌊 Subsea Epicentre',
     title: 'Navi Mumbai & Chandivali Hyperscale Hub',
@@ -88,7 +86,6 @@ export const CINEMATIC_TOUR_SCENES = [
   },
   {
     id: 'bengaluru',
-    preset: 'south',
     state: 'Karnataka',
     badge: '💻 Silicon Plateau',
     title: 'Bengaluru Tech Corridor & Pavagada Clean Grid',
@@ -100,12 +97,11 @@ export const CINEMATIC_TOUR_SCENES = [
     tariff: '₹7.40 / kWh',
     pueTarget: '1.20 – 1.28 PUE',
     description: 'Bengaluru sits at 920m elevation, delivering 2,900+ natural free-cooling hours. However, severe Cauvery municipal water quotas and depleted urban borewells necessitate two-phase liquid immersion or zero-water architectures.',
-    policyHighlight: 'Karnataka DC Policy 2022: Green Power Open Access Concessions and Capital Subsidies for AI Compute.',
+    policyHighlight: 'Karnataka DC Policy: Green Power Open Access Concessions and Capital Subsidies for AI Compute.',
     humanImpact: 'Zero-evaporative cooling safeguards drinking water for adjacent residential technology corridors.'
   },
   {
     id: 'ncr',
-    preset: 'ncr',
     state: 'Uttar Pradesh',
     badge: '🏛️ North India AI Hub',
     title: 'Greater Noida Enterprise Hyperscale Hub',
@@ -117,12 +113,11 @@ export const CINEMATIC_TOUR_SCENES = [
     tariff: '₹7.90 / kWh',
     pueTarget: '1.25 – 1.35 PUE',
     description: 'Knowledge Park V hosts North India\'s premier hyperscale cluster, benefiting from 4x permissible FAR and dedicated 220 kV sub-stations. Yamuna basin groundwater over-extraction requires 100% STP recycled water integration.',
-    policyHighlight: 'UP Data Center Policy 2021: 100% Stamp Duty Exemption, 4x FAR, and 50% Dual-Grid Feeder Subsidy up to ₹10 Cr.',
+    policyHighlight: 'UP Data Center Policy: 100% Stamp Duty Exemption, 4x FAR, and 50% Dual-Grid Feeder Subsidy up to ₹10 Cr.',
     humanImpact: 'Mandatory recycled STP cooling saves ~220 Million Litres of Yamuna freshwater annually.'
   },
   {
     id: 'himachal',
-    preset: 'himachal',
     state: 'Himachal Pradesh',
     badge: '🏔️ Cold-Climate AI Edge',
     title: 'Himalayan Cold-Air Valley & Hydro Grid',
@@ -147,11 +142,10 @@ export default function LandingPage({
 }) {
   const stats = getNationalStats();
 
-  // Cinematic Video Photography Tour State
+  // Cinematic Video Tour State
   const [activeTourIndex, setActiveTourIndex] = useState(0);
   const [isPlayingTour, setIsPlayingTour] = useState(true);
   const [tourProgress, setTourProgress] = useState(0);
-  const tourTimerRef = useRef(null);
 
   const currentScene = CINEMATIC_TOUR_SCENES[activeTourIndex];
 
@@ -193,23 +187,34 @@ export default function LandingPage({
   const annualElectricityCr = Math.round(((annualEnergyGWh * 1000000 * 7.4) / 10000000) * 10) / 10;
 
   return (
-    <div className="space-y-12 animate-fadeIn text-slate-800 dark:text-slate-100 transition-colors duration-200">
+    <div className="relative space-y-12 animate-fadeIn text-slate-800 dark:text-slate-100 transition-colors duration-200">
+      {/* ANIMATED BACKGROUND GRID & CYBERNETIC AURORA GLOWS */}
+      <div className="absolute inset-0 bg-cyber-grid opacity-70 pointer-events-none -z-10" />
+      <div className="fixed top-20 left-10 w-[550px] h-[550px] bg-emerald-500/10 dark:bg-emerald-500/15 rounded-full blur-[140px] pointer-events-none -z-10 aurora-glow-1" />
+      <div className="fixed bottom-20 right-10 w-[600px] h-[600px] bg-sky-500/10 dark:bg-teal-500/15 rounded-full blur-[150px] pointer-events-none -z-10 aurora-glow-2" />
+
+      {/* Floating Animated Green Spark Particles */}
+      <div className="absolute top-1/4 left-1/6 w-2 h-2 rounded-full bg-emerald-400/50 blur-[1px] pointer-events-none" style={{ animation: 'particleFloat 6s ease-in-out infinite' }} />
+      <div className="absolute top-1/3 right-1/5 w-2.5 h-2.5 rounded-full bg-teal-400/40 blur-[1px] pointer-events-none" style={{ animation: 'particleFloat 8s ease-in-out infinite 2s' }} />
+      <div className="absolute top-2/3 left-1/3 w-2 h-2 rounded-full bg-cyan-400/50 blur-[1px] pointer-events-none" style={{ animation: 'particleFloat 7s ease-in-out infinite 1s' }} />
+
       {/* HERO SECTION: Problem Statement & Value Proposition */}
       <div className="text-center max-w-4xl mx-auto space-y-4 pt-2">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-xs font-mono text-emerald-800 dark:text-emerald-300 font-bold shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>NATIONAL DATA CENTRE INFRASTRUCTURE & SITING INTELLIGENCE</span>
+        {/* NO API KEY NEEDED BADGE PILL */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700/80 text-emerald-800 dark:text-emerald-300 font-bold shadow-sm backdrop-blur-md">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <span className="font-mono text-[11px] tracking-wider uppercase">100% Free & Open Access • No API Key Needed • Deterministic ESG Engine</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight font-heading">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.12] font-display">
           Decarbonizing India's 5 GW <br className="hidden sm:inline" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600">
             AI & Cloud Data Centre Boom
           </span>
         </h1>
 
-        <p className="text-xs sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
-          India is expanding from 1,000 MW to over 5,000 MW of data center capacity for Artificial Intelligence.
+        <p className="text-xs sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto font-sans">
+          India is scaling past 5,000 MW of compute capacity for Artificial Intelligence.
           GreenDC pairs hyperscale campuses with <strong>30 GW renewable mega-parks</strong>, verified <strong>IMD free-cooling hours</strong>, and <strong>CGWB hydrological water safety</strong> before breaking ground.
         </p>
 
@@ -220,7 +225,7 @@ export default function LandingPage({
               if (onNavigateToCommand) onNavigateToCommand();
               else if (onNavigateToSimulator) onNavigateToSimulator();
             }}
-            className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-sm sm:text-base flex items-center gap-2.5 shadow-xl shadow-emerald-700/25 transition transform hover:-translate-y-0.5 cursor-pointer"
+            className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-sm sm:text-base flex items-center gap-2.5 shadow-xl shadow-emerald-700/25 transition transform hover:-translate-y-0.5 cursor-pointer font-display"
           >
             <Zap className="w-5 h-5 text-amber-300 fill-amber-300" />
             <span>Launch Live Simulation Dashboard</span>
@@ -232,7 +237,7 @@ export default function LandingPage({
               if (onNavigateToCommand) onNavigateToCommand();
               else if (onNavigateToMap) onNavigateToMap();
             }}
-            className="px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold text-sm flex items-center gap-2 border border-slate-200 dark:border-slate-700 shadow-md transition cursor-pointer"
+            className="px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold text-sm flex items-center gap-2 border border-slate-200 dark:border-slate-700 shadow-md transition cursor-pointer font-sans"
           >
             <Compass className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <span>Explore Pan-India GIS Map</span>
@@ -240,19 +245,19 @@ export default function LandingPage({
         </div>
       </div>
 
-      {/* AUTOMATED CINEMATIC "VIDEO PHOTOGRAPHY" 3D TOUR SHOWCASE */}
-      <div className="eco-card p-4 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-slate-900 space-y-4">
+      {/* REAL DASHBOARD GIS MAP SHOWCASE WITH CORRIDOR TOUR & LIVE TELEMETRY HUD */}
+      <div className="eco-card p-4 sm:p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl space-y-4">
         {/* Header & Tour Controls */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
             <div className="flex items-center gap-2">
               <Camera className="w-4 h-4 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-              <h3 className="text-base font-extrabold text-slate-900 dark:text-white font-heading">
-                Cinematic 3D Video Photography Tour: Key Indian Siting Corridors
+              <h3 className="text-lg font-black text-slate-900 dark:text-white font-display">
+                Interactive Siting Corridors: Pan-India GIS Map
               </h3>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Automated drone-flight sequences showcasing live generation, free cooling, and groundwater constraints across India.
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-sans">
+              Live GIS map with 122+ cities, real renewable transmission corridors, and automated regional telemetry.
             </p>
           </div>
 
@@ -260,7 +265,7 @@ export default function LandingPage({
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setIsPlayingTour(!isPlayingTour)}
-              className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 border transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 border transition cursor-pointer font-sans ${
                 isPlayingTour
                   ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border-emerald-300'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200'
@@ -275,81 +280,75 @@ export default function LandingPage({
           </div>
         </div>
 
-        {/* 3D Viewport with Live Animated Holographic HUD Card Overlay */}
-        <div className="relative w-full h-[520px] rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-inner bg-slate-950">
-          {/* Progress Countdown Bar */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-slate-800/80 z-30">
-            <div
-              className="h-full bg-gradient-to-r from-emerald-500 to-sky-400 transition-all duration-75"
-              style={{ width: `${tourProgress}%` }}
-            />
-          </div>
-
-          {/* Three.js 3D WebGL Canvas */}
-          <India3DCanvas
-            activeCameraPreset={currentScene.preset}
-            onCameraChange={(camId) => {
-              const matchedIdx = CINEMATIC_TOUR_SCENES.findIndex(s => s.preset === camId);
-              if (matchedIdx !== -1) {
-                setActiveTourIndex(matchedIdx);
-                setTourProgress(0);
-              }
-            }}
-            interactive={true}
-            height="520px"
-            showControls={false}
+        {/* Progress Countdown Bar */}
+        <div className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400 transition-all duration-75"
+            style={{ width: `${tourProgress}%` }}
           />
+        </div>
 
-          {/* FLOATING HOLOGRAPHIC TELEMETRY HUD CARD (Pops up with metrics) */}
-          <div className="absolute top-4 left-4 z-20 max-w-sm sm:max-w-md bg-slate-950/85 text-white backdrop-blur-xl rounded-2xl border border-emerald-500/40 p-4 shadow-2xl space-y-3 animate-fadeIn">
-            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-emerald-400">
-                  {currentScene.badge}
+        {/* SIDE-BY-SIDE RESPONSIVE LAYOUT: HUD TELEMETRY CARD ON LEFT + REAL GIS MAP ON RIGHT */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          {/* LEFT: FLOATING HOLOGRAPHIC TELEMETRY HUD CARD (lg:col-span-5) */}
+          <div className="lg:col-span-5 flex flex-col justify-between bg-slate-950 text-white rounded-3xl border border-emerald-500/40 p-5 shadow-2xl space-y-4 relative overflow-hidden">
+            {/* Background cyber ambient glow in HUD */}
+            <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="space-y-3 relative z-10">
+              <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="text-[11px] uppercase font-mono font-bold tracking-wider text-emerald-400">
+                    {currentScene.badge}
+                  </span>
+                </div>
+                <span className="text-[11px] font-mono text-slate-400">
+                  Corridor: <strong className="text-white font-bold">{currentScene.state}</strong>
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">
-                Region: <strong className="text-white">{currentScene.state}</strong>
-              </span>
-            </div>
 
-            <div>
-              <h4 className="text-base font-black text-white font-heading leading-tight">
-                {currentScene.title}
-              </h4>
-              <p className="text-[11px] text-teal-300 font-medium mt-0.5 line-clamp-1">
-                📍 {currentScene.location}
-              </p>
-              <p className="text-xs text-slate-300 leading-relaxed mt-2">
-                {currentScene.description}
-              </p>
-            </div>
+              <div>
+                <h4 className="text-lg font-black text-white font-display leading-tight">
+                  {currentScene.title}
+                </h4>
+                <p className="text-xs text-teal-300 font-medium mt-1 flex items-center gap-1">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>{currentScene.location}</span>
+                </p>
+                <p className="text-xs text-slate-300 leading-relaxed mt-2.5 font-sans">
+                  {currentScene.description}
+                </p>
+              </div>
 
-            {/* 4 Micro Metric Indicators */}
-            <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
-              <div className="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
-                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono block">Clean Capacity</span>
-                <strong className="text-emerald-400 font-mono text-xs">{currentScene.capacity}</strong>
+              {/* 4 Micro Metric Indicators */}
+              <div className="grid grid-cols-2 gap-2.5 text-xs pt-1">
+                <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800/90">
+                  <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono block">Clean Capacity</span>
+                  <strong className="text-emerald-400 font-mono text-xs font-bold block mt-0.5">{currentScene.capacity}</strong>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800/90">
+                  <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono block">Free Cooling</span>
+                  <strong className="text-sky-300 font-mono text-xs font-bold block mt-0.5">{currentScene.freeCooling}</strong>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800/90">
+                  <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono block">Water Risk</span>
+                  <strong className="text-amber-400 text-xs font-bold block mt-0.5">{currentScene.waterRisk}</strong>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800/90">
+                  <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono block">Power Tariff</span>
+                  <strong className="text-teal-300 font-mono text-xs font-bold block mt-0.5">{currentScene.tariff}</strong>
+                </div>
               </div>
-              <div className="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
-                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono block">Free Cooling</span>
-                <strong className="text-sky-300 font-mono text-xs">{currentScene.freeCooling}</strong>
-              </div>
-              <div className="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
-                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono block">Water Risk</span>
-                <strong className="text-amber-400 text-xs">{currentScene.waterRisk}</strong>
-              </div>
-              <div className="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
-                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono block">Power Tariff</span>
-                <strong className="text-teal-300 font-mono text-xs">{currentScene.tariff}</strong>
-              </div>
-            </div>
 
-            {/* Policy & Impact Note */}
-            <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/20 text-[11px] text-emerald-200">
-              <span className="font-bold text-white block mb-0.5">📜 State Policy Incentive:</span>
-              {currentScene.policyHighlight}
+              {/* Policy & Impact Note */}
+              <div className="p-3 rounded-2xl bg-emerald-950/40 border border-emerald-500/25 text-xs text-emerald-200">
+                <span className="font-bold text-white block mb-0.5 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>State Policy Incentive:</span>
+                </span>
+                <p className="text-[11px] leading-relaxed text-emerald-100/90">{currentScene.policyHighlight}</p>
+              </div>
             </div>
 
             {/* Direct Launch Button */}
@@ -358,58 +357,81 @@ export default function LandingPage({
                 if (onNavigateToCommand) onNavigateToCommand(currentScene.state);
                 else if (onNavigateToSimulator) onNavigateToSimulator();
               }}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg transition cursor-pointer"
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/50 transition cursor-pointer font-display"
             >
               <span>🚀 Launch Live Simulation in {currentScene.state}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Interactive Scene Stepper Pills at Bottom */}
-          <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-center gap-2 overflow-x-auto py-1">
-            {CINEMATIC_TOUR_SCENES.map((scene, idx) => {
-              const isActive = idx === activeTourIndex;
-              return (
-                <button
-                  key={scene.id}
-                  onClick={() => handleSelectScene(idx)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer shadow-lg backdrop-blur-md ${
-                    isActive
-                      ? 'bg-emerald-600 text-white border border-emerald-400 ring-2 ring-emerald-500/30'
-                      : 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700'
-                  }`}
-                >
-                  <span>{scene.badge.split(' ')[0]}</span>
-                  <span>{scene.state}</span>
-                </button>
-              );
-            })}
+          {/* RIGHT: REAL FULL DASHBOARD GIS MAP (lg:col-span-7) */}
+          <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl relative min-h-[540px]">
+            <IndiaMapSVG
+              selectedState={currentScene.state}
+              onStateClick={(stateName) => {
+                const matchedIdx = CINEMATIC_TOUR_SCENES.findIndex(
+                  s => s.state.toLowerCase() === stateName.toLowerCase()
+                );
+                if (matchedIdx !== -1) {
+                  setActiveTourIndex(matchedIdx);
+                  setTourProgress(0);
+                }
+              }}
+              onDCClick={(dc) => {
+                if (onNavigateToCommand) onNavigateToCommand(dc.state);
+              }}
+              height={560}
+              mapStyle="satellite"
+              showTransmission={true}
+              showCities={true}
+            />
           </div>
+        </div>
+
+        {/* Interactive Scene Stepper Pills at Bottom */}
+        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto py-2 border-t border-slate-100 dark:border-slate-800 no-scrollbar">
+          {CINEMATIC_TOUR_SCENES.map((scene, idx) => {
+            const isActive = idx === activeTourIndex;
+            return (
+              <button
+                key={scene.id}
+                onClick={() => handleSelectScene(idx)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer shadow-md backdrop-blur-md font-sans ${
+                  isActive
+                    ? 'bg-emerald-600 text-white border border-emerald-400 ring-2 ring-emerald-500/30'
+                    : 'bg-white dark:bg-slate-800/90 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                }`}
+              >
+                <span>{scene.badge.split(' ')[0]}</span>
+                <span>{scene.state}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* National Siting Key Metrics Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-slate-800 bg-emerald-50/50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/40 p-3 sm:p-4 text-xs">
           <div className="p-3 text-center sm:text-left">
             <span className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 block font-mono font-bold">Documented IT Capacity</span>
-            <span className="text-xl font-extrabold text-slate-900 dark:text-white font-mono mt-0.5 block">{stats.totalReportedCapacityMW} MW</span>
+            <span className="text-xl font-black text-slate-900 dark:text-white font-mono mt-0.5 block">{stats.totalReportedCapacityMW} MW</span>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">Verified hyperscale payload</span>
           </div>
 
           <div className="p-3 text-center sm:text-left">
             <span className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 block font-mono font-bold">122+ Indian Siting Cities</span>
-            <span className="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 font-mono mt-0.5 block">28 States & UTs</span>
+            <span className="text-xl font-black text-emerald-700 dark:text-emerald-400 font-mono mt-0.5 block">28 States & UTs</span>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">IMD temperature & water normals</span>
           </div>
 
           <div className="p-3 text-center sm:text-left">
             <span className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 block font-mono font-bold">National Renewable Share</span>
-            <span className="text-xl font-extrabold text-teal-700 dark:text-teal-400 font-mono mt-0.5 block">44.5% CEA Avg</span>
+            <span className="text-xl font-black text-teal-700 dark:text-teal-400 font-mono mt-0.5 block">44.5% CEA Avg</span>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">Hydro, solar & wind wheeling</span>
           </div>
 
           <div className="p-3 text-center sm:text-left">
             <span className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 block font-mono font-bold">Target Modern PUE</span>
-            <span className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 block">1.25 vs 1.62</span>
+            <span className="text-xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 block">1.25 vs 1.62</span>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">-58% Cooling energy waste</span>
           </div>
         </div>
@@ -421,10 +443,10 @@ export default function LandingPage({
           <div className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-700 dark:text-emerald-400 uppercase tracking-widest font-bold">
             <Building2 className="w-4 h-4 text-emerald-600" /> Platform Architecture
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight font-heading">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight font-display">
             How GreenDC Solves India's Siting Bottlenecks
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-sans">
             Traditional data center planning looks only at fiber and land. GreenDC adds physics-based energy and water intelligence.
           </p>
         </div>
@@ -435,10 +457,10 @@ export default function LandingPage({
             <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold">
               <Zap className="w-5 h-5 fill-current" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading">
+            <h3 className="text-base font-black text-slate-900 dark:text-white font-display">
               1. 30 GW Renewable Mega-Park Matching
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
               Instead of plugging into thermal coal grids (720+ gCO2/kWh), GreenDC maps high-voltage inter-state corridors from Khavda (30 GW), Bhadla (2.24 GW), and Pavagada (2.05 GW) to achieve true 24x7 green power matching.
             </p>
             <div className="pt-2 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
@@ -451,10 +473,10 @@ export default function LandingPage({
             <div className="w-10 h-10 rounded-2xl bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-400 flex items-center justify-center font-bold">
               <Droplets className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading">
+            <h3 className="text-base font-black text-slate-900 dark:text-white font-display">
               2. CGWB Aquifer Vulnerability Modeling
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
               Standard cooling towers consume up to 1.8 Litres of freshwater per kWh. In drought-prone regions (Rajasthan, NCR, Bengaluru), GreenDC models adiabatic dry cooling and two-phase liquid immersion to avoid community water conflicts.
             </p>
             <div className="pt-2 text-[11px] font-mono text-sky-700 dark:text-sky-400 font-bold flex items-center gap-1">
@@ -467,10 +489,10 @@ export default function LandingPage({
             <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold">
               <MapPin className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading">
+            <h3 className="text-base font-black text-slate-900 dark:text-white font-display">
               3. Pan-India 122+ Cities Siting Matrix
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
               Comprehensive municipal directory tracking real IMD wet-bulb temperatures, natural free-cooling hours, commercial electricity tariffs, subsea cable landings, and 28 state data center policies.
             </p>
             <div className="pt-2 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
@@ -486,11 +508,11 @@ export default function LandingPage({
           <div>
             <div className="flex items-center gap-2">
               <Sliders className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">
+              <h3 className="text-lg font-black text-slate-900 dark:text-white font-display">
                 Tactile Sizing Sandbox: Real-World Human Scale Equivalents
               </h3>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-sans">
               Adjust IT load and PUE efficiency to see instant plain-English physical impacts.
             </p>
           </div>
@@ -500,7 +522,7 @@ export default function LandingPage({
               if (onNavigateToCommand) onNavigateToCommand();
               else if (onNavigateToSimulator) onNavigateToSimulator();
             }}
-            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition cursor-pointer font-display"
           >
             <span>Open Full Simulation Studio</span>
             <ArrowRight className="w-3.5 h-3.5" />

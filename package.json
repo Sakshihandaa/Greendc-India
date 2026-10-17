@@ -9,6 +9,8 @@
     "apps/*"
   ],
   "scripts": {
+    "dev": "npm --workspace=@greendc/web run dev",
+    "dev:all": "node apps/api/src/server.js & npm --workspace=@greendc/web run dev",
     "test": "node --test packages/calculator/tests/**/*.test.js apps/api/tests/**/*.test.js",
     "test:calculator": "node --test packages/calculator/tests/**/*.test.js",
     "test:api": "node --test apps/api/tests/**/*.test.js",

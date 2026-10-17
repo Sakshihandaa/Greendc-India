@@ -167,24 +167,14 @@ export default function Header({
               </kbd>
             </button>
 
-            {/* Engine Telemetry */}
+            {/* Open Access / No API Key Required Badge */}
             <div
-              title={
-                apiHealth.status === 'online'
-                  ? `Express API Online (:5001) • Deterministic Math Engine Active`
-                  : 'Operating in High-Performance Local Mode'
-              }
-              className="hidden sm:flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-mono"
+              title="100% Free & Open Access • Deterministic Physics Engine • No API Key or Login Required"
+              className="hidden sm:flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/90 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-sans shadow-sm"
             >
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  apiHealth.status === 'online'
-                    ? 'bg-emerald-500 animate-pulse'
-                    : 'bg-teal-500'
-                }`}
-              />
-              <span className="text-[11px] font-bold">
-                {apiHealth.status === 'online' ? 'API :5001' : 'Local'}
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span className="text-[11px] font-bold tracking-tight whitespace-nowrap">
+                No API Key Needed
               </span>
             </div>
           </div>
