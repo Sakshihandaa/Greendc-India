@@ -72,6 +72,8 @@ export default function IndiaMapSVG({
   simulatedRenewableShare = 0.50,
   simulatedCoolingTech = 'immersion_1p',
   simulatedPUE = 1.30,
+  showPopupOnSelect = true,
+  defaultLegendOpen = true,
 }) {
   const containerRef = useRef(null);
   const svgRef = useRef(null);
@@ -94,7 +96,7 @@ export default function IndiaMapSVG({
   const [activeTab, setActiveTab] = useState('metrics'); // 'metrics', 'policy', 'connectivity'
 
   // Map Legend & Guide State
-  const [isLegendOpen, setIsLegendOpen] = useState(true);
+  const [isLegendOpen, setIsLegendOpen] = useState(defaultLegendOpen);
   const [legendTab, setLegendTab] = useState('symbols'); // 'symbols' | 'scale'
   const [hoveredCity, setHoveredCity] = useState(null);
   const [showAllCities, setShowAllCities] = useState(false);
@@ -214,11 +216,11 @@ export default function IndiaMapSVG({
 
   // Sync externalSelectedState
   useEffect(() => {
-    if (externalSelectedState) {
+    if (externalSelectedState && showPopupOnSelect) {
       const intel = getStateIntelligence(externalSelectedState);
       if (intel) setActivePopupState(intel);
     }
-  }, [externalSelectedState]);
+  }, [externalSelectedState, showPopupOnSelect]);
 
   // Focus zoom on selected state centroid
   const handleFocusSelectedState = useCallback((targetStateName) => {
