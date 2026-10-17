@@ -14,7 +14,8 @@ import {
   Download,
   FileText,
   Sun,
-  Moon
+  Moon,
+  Sparkles
 } from 'lucide-react';
 
 export default function Header({
@@ -37,7 +38,7 @@ export default function Header({
         const res = await fetch('/api/health');
         if (res.ok) {
           const data = await res.json();
-          if (mounted) setApiHealth({ status: 'online', uptime: data.uptimeSeconds });
+        if (mounted) setApiHealth({ status: 'online', uptime: data.uptimeSeconds });
         } else {
           if (mounted) setApiHealth({ status: 'local', uptime: null });
         }
@@ -55,6 +56,7 @@ export default function Header({
   }, []);
 
   const navItems = [
+    { id: 'landing', label: 'Overview & 3D Tour', icon: Sparkles },
     { id: 'command', label: 'Command Center', icon: Compass },
     { id: 'catalog', label: 'Verified Campuses', icon: Server },
     { id: 'codex', label: 'Physics Codex', icon: BookOpen }
@@ -66,7 +68,7 @@ export default function Header({
         <div className="flex items-center justify-between h-16 gap-3">
           {/* Brand Logo */}
           <div 
-            onClick={() => setActiveTab('command')}
+            onClick={() => setActiveTab('landing')}
             className="flex items-center gap-2.5 cursor-pointer group shrink-0"
           >
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-md shadow-emerald-500/25 group-hover:scale-105 transition">
@@ -88,11 +90,11 @@ export default function Header({
             </div>
           </div>
 
-          {/* Streamlined Navigation Bar (Command Center, Campuses, Codex) */}
+          {/* Streamlined Navigation Bar (Overview & 3D Tour, Command Center, Campuses, Codex) */}
           <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/90 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = activeTab === item.id || (item.id === 'command' && (activeTab === 'landing' || activeTab === 'map' || activeTab === 'simulator' || activeTab === 'water' || activeTab === 'comparison'));
+              const isActive = activeTab === item.id || (item.id === 'command' && (activeTab === 'map' || activeTab === 'simulator' || activeTab === 'water' || activeTab === 'comparison'));
               return (
                 <button
                   key={item.id}

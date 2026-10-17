@@ -105,6 +105,7 @@ export default function UnifiedCommandCenter({
   onOpenCodex,
   onRegisterExportHandler,
   initialFacility = null,
+  initialState = null,
   initialConsoleTab = 'energy'
 }) {
   // Load saved state from localStorage if available
@@ -120,7 +121,7 @@ export default function UnifiedCommandCenter({
   // Map View State
   const [activeTileKey, setActiveTileKey] = useState('voyager');
   const [selectedFacility, setSelectedFacility] = useState(initialFacility || FACILITIES[0]);
-  const [selectedState, setSelectedState] = useState(savedState?.selectedState || initialFacility?.state || 'Maharashtra');
+  const [selectedState, setSelectedState] = useState(initialState || savedState?.selectedState || initialFacility?.state || 'Maharashtra');
   const [customSitedCoords, setCustomSitedCoords] = useState(null);
   const [showTransmissionArcs, setShowTransmissionArcs] = useState(true);
   const [showStateBorders, setShowStateBorders] = useState(true);
@@ -232,6 +233,17 @@ export default function UnifiedCommandCenter({
       }
     }
   }, [selectedFacility]);
+
+  // Sync state if initialState changes (e.g. from 3D Cinematic Tour)
+  useEffect(() => {
+    if (initialState) {
+      setSelectedState(initialState);
+      const intel = getStateIntelligence(initialState);
+      if (intel && intel.tariffCommercial) {
+        setCustomTariff(intel.tariffCommercial);
+      }
+    }
+  }, [initialState]);
 
   // Run Deterministic Physics Simulation whenever parameters change
   useEffect(() => {

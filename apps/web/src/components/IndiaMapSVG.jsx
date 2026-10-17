@@ -573,16 +573,27 @@ export default function IndiaMapSVG({
         </div>
       )}
 
-      {/* 3D PERSPECTIVE VIEWPORT */}
+      {/* 3D PERSPECTIVE VIEWPORT (Conditional: 3D context active only when tilted to preserve razor-sharp SVG vector rendering in 2D) */}
       <div
         className="w-full h-full relative"
-        style={{
-          perspective: '1200px',
-          perspectiveOrigin: '50% 50%',
-          transformStyle: 'preserve-3d'
-        }}
+        style={
+          pitchAngle === 0 && yawAngle === 0
+            ? { perspective: 'none', transformStyle: 'flat' }
+            : {
+                perspective: '1200px',
+                perspectiveOrigin: '50% 50%',
+                transformStyle: 'preserve-3d'
+              }
+        }
       >
-        <div className="w-full h-full relative" style={cameraTransformStyle}>
+        <div
+          className="w-full h-full relative"
+          style={
+            pitchAngle === 0 && yawAngle === 0
+              ? { transform: 'none' }
+              : cameraTransformStyle
+          }
+        >
           {pitchAngle > 10 && (
             <div
               className="absolute pointer-events-none rounded-full blur-3xl opacity-30"
@@ -599,7 +610,7 @@ export default function IndiaMapSVG({
             />
           )}
 
-          {/* SVG MAP ELEMENT WITH EXPLICIT XMLNS AND ID FOR 100% RELIABLE PDF CAPTURE */}
+          {/* SVG MAP ELEMENT WITH EXPLICIT XMLNS AND HIGH-PRECISION VECTOR RENDERING */}
           <svg
             id="greendc-india-svg"
             xmlns="http://www.w3.org/2000/svg"
@@ -607,7 +618,14 @@ export default function IndiaMapSVG({
             width={containerSize.w}
             height={containerSize.h}
             className="absolute inset-0 cursor-crosshair"
-            style={{ zIndex: 1 }}
+            shapeRendering="geometricPrecision"
+            textRendering="geometricPrecision"
+            style={{
+              zIndex: 1,
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale',
+              textRendering: 'geometricPrecision'
+            }}
             onClick={handleSVGClick}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -622,12 +640,6 @@ export default function IndiaMapSVG({
               <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
                 <path d="M 40 0 L 0 0 0 40" fill="none" stroke={bg.grid} strokeWidth="0.5" />
               </pattern>
-              <filter id="landShadow" x="-5%" y="-5%" width="110%" height="110%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#00000022" />
-              </filter>
-              <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#00000030" />
-              </filter>
             </defs>
 
             {/* Grid overlay */}
@@ -650,31 +662,30 @@ export default function IndiaMapSVG({
 
                 return (
                   <g key={geoName}>
-                    {/* State Polygon Path - Vivid, High Contrast Thematic Coloring */}
+                    {/* State Polygon Path - Balanced, Tasteful Cartographic Thematic Fill */}
                     <path
                       d={pathD}
                       fill={fillColor}
                       fillOpacity={
                         isSelected
-                          ? 0.98
+                          ? 0.90
                           : isHovered
-                          ? 0.92
-                          : (isDark ? 0.82 : 0.80)
+                          ? 0.72
+                          : (isDark ? 0.58 : 0.50)
                       }
                       stroke={
                         isSelected
                           ? '#047857'
                           : isHovered
                           ? (isDark ? '#38bdf8' : '#0284c7')
-                          : (isDark ? '#0f172a' : '#ffffff')
+                          : (isDark ? '#334155' : '#ffffff')
                       }
                       strokeWidth={
-                        (isSelected ? 3.0 : isHovered ? 2.2 : 1.25) / transform.k
+                        (isSelected ? 2.5 : isHovered ? 1.8 : 1.1) / transform.k
                       }
                       style={{
                         cursor: 'pointer',
-                        transition: 'fill-opacity 0.2s, stroke 0.2s, stroke-width 0.2s',
-                        filter: isSelected ? 'url(#landShadow)' : 'none'
+                        transition: 'fill-opacity 0.2s, stroke 0.2s, stroke-width 0.2s'
                       }}
                       onMouseEnter={() => setHoveredState(geoName)}
                       onMouseLeave={() => setHoveredState(null)}
@@ -690,30 +701,37 @@ export default function IndiaMapSVG({
                       <title>{`${intel?.displayName || geoName} (${intel?.code || ''})\n• Tier: ${intel?.tier || 'Regional'}\n• DC Suitability Score: ${intel?.greenSuitabilityScore || 80}/100\n• RE Generation Share: ${intel?.reSharePercent || 30}%\n• Water Stress: ${intel?.waterStress || 'Moderate'}\n• Grid Carbon: ${intel?.gridCarbonFactor || 710} gCO2/kWh\n• Commercial Tariff: ₹${intel?.tariffCommercial || 7.5}/unit\n\n👉 Click to inspect State Policy & Telemetry`}</title>
                     </path>
 
-                    {/* State Code Label Badge centered on polygon */}
+                    {/* State Code Label Badge centered on polygon with Crisp Vector Backing */}
                     {centroid && intel?.code && (
                       <g
                         style={{ pointerEvents: 'none' }}
                         transform={`translate(${centroid[0]}, ${centroid[1]})`}
                       >
                         <rect
+                          x={-10.5 / transform.k}
+                          y={-6.5 / transform.k}
+                          width={21 / transform.k}
+                          height={13 / transform.k}
+                          rx={3 / transform.k}
+                          fill="#00000015"
+                        />
+                        <rect
                           x={-11 / transform.k}
                           y={-7.5 / transform.k}
                           width={22 / transform.k}
                           height={15 / transform.k}
-                          rx={4 / transform.k}
-                          fill={isSelected ? '#059669' : (isDark ? '#1e293bf2' : '#fffffffa')}
+                          rx={3.5 / transform.k}
+                          fill={isSelected ? '#059669' : (isDark ? '#1e293bf5' : '#ffffff')}
                           stroke={isSelected ? '#ffffff' : (isDark ? '#475569' : '#cbd5e1')}
                           strokeWidth={1 / transform.k}
-                          filter="url(#badgeShadow)"
                         />
                         <text
                           textAnchor="middle"
                           dominantBaseline="central"
-                          fontSize={7.5 / transform.k}
-                          fill={isSelected ? '#ffffff' : (isDark ? '#f8fafc' : '#0f172a')}
+                          fontSize={7.2 / transform.k}
+                          fill={isSelected ? '#ffffff' : (isDark ? '#f8fafc' : '#1e293b')}
                           fontWeight="800"
-                          fontFamily="sans-serif"
+                          fontFamily="system-ui, -apple-system, sans-serif"
                         >
                           {intel.code}
                         </text>
@@ -848,22 +866,31 @@ export default function IndiaMapSVG({
                       {effectiveMW > 99 ? `${Math.round(effectiveMW / 10) * 10}M` : `${effectiveMW}M`}
                     </text>
 
-                    {/* Readable Hub Name Label below beacon */}
-                    <text
-                      x={dx}
-                      y={dy + (coreR + 6 / transform.k)}
-                      textAnchor="middle"
-                      fontSize={6.2 / transform.k}
-                      fill={isDark ? '#f8fafc' : '#0f172a'}
-                      stroke={isDark ? '#0f172a' : '#ffffff'}
-                      strokeWidth={2.2 / transform.k}
-                      strokeLinejoin="round"
-                      style={{ paintOrder: 'stroke fill', pointerEvents: 'none' }}
-                      fontWeight="700"
-                      fontFamily="sans-serif"
-                    >
-                      {dc.name.split(' ')[0]} ({effectiveMW}M)
-                    </text>
+                    {/* Readable Hub Name Label below beacon with Crisp Vector Pill */}
+                    <g style={{ pointerEvents: 'none' }}>
+                      <rect
+                        x={dx - ((dc.name.split(' ')[0].length * 4.2 + 18) / 2) / transform.k}
+                        y={dy + (coreR + 2.5 / transform.k)}
+                        width={(dc.name.split(' ')[0].length * 4.2 + 18) / transform.k}
+                        height={8.5 / transform.k}
+                        rx={2 / transform.k}
+                        fill={isDark ? '#0f172af0' : '#fffffff0'}
+                        stroke={isDark ? '#334155' : '#cbd5e1'}
+                        strokeWidth={0.6 / transform.k}
+                      />
+                      <text
+                        x={dx}
+                        y={dy + (coreR + 6.8 / transform.k)}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        fontSize={5.6 / transform.k}
+                        fill={isDark ? '#f8fafc' : '#0f172a'}
+                        fontWeight="700"
+                        fontFamily="system-ui, -apple-system, sans-serif"
+                      >
+                        {dc.name.split(' ')[0]} ({effectiveMW}M)
+                      </text>
+                    </g>
                   </g>
                 );
               })}
@@ -902,19 +929,29 @@ export default function IndiaMapSVG({
                       strokeWidth={0.9 / transform.k}
                     />
                     {isMajor && (
-                      <text
-                        x={cx + 4.5 / transform.k} y={cy + 1.2 / transform.k}
-                        fontSize={(c.major ? 7.2 : 5.8) / transform.k}
-                        fill={isDark ? '#f8fafc' : '#0f172a'}
-                        stroke={isDark ? '#0f172a' : '#ffffff'}
-                        strokeWidth={2.5 / transform.k}
-                        strokeLinejoin="round"
-                        style={{ paintOrder: 'stroke fill', pointerEvents: 'none' }}
-                        fontWeight={c.major ? '800' : '600'}
-                        fontFamily="sans-serif"
-                      >
-                        {c.name.split(' (')[0]}
-                      </text>
+                      <g style={{ pointerEvents: 'none' }}>
+                        <rect
+                          x={cx + 4.5 / transform.k}
+                          y={cy - 4.5 / transform.k}
+                          width={(c.name.split(' (')[0].length * 4.3 + 5) / transform.k}
+                          height={9 / transform.k}
+                          rx={2 / transform.k}
+                          fill={isDark ? '#0f172ae6' : '#ffffffe6'}
+                          stroke={isDark ? '#334155' : '#cbd5e1'}
+                          strokeWidth={0.6 / transform.k}
+                        />
+                        <text
+                          x={cx + 7 / transform.k}
+                          y={cy + 0.2 / transform.k}
+                          fontSize={5.8 / transform.k}
+                          fill={isDark ? '#f8fafc' : '#0f172a'}
+                          fontWeight="700"
+                          fontFamily="system-ui, -apple-system, sans-serif"
+                          dominantBaseline="central"
+                        >
+                          {c.name.split(' (')[0]}
+                        </text>
+                      </g>
                     )}
                   </g>
                 );

@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Header from './components/Header';
+import LandingPage from './components/LandingPage';
 import UnifiedCommandCenter from './components/UnifiedCommandCenter';
 import Catalog from './components/Catalog';
 import MethodologyModal from './components/MethodologyModal';
 import QuickSearchModal from './components/QuickSearchModal';
-import { Server, Compass, BookOpen } from 'lucide-react';
+import { Server, Compass, BookOpen, Sparkles } from 'lucide-react';
 
 const HASH_MAP = {
-  '': 'command',
+  '': 'landing',
+  '#': 'landing',
+  '#landing': 'landing',
+  '#overview': 'landing',
+  '#tour': 'landing',
   '#command': 'command',
-  '#overview': 'command',
   '#map': 'command',
   '#scenario': 'command',
   '#water': 'command',
@@ -19,6 +23,7 @@ const HASH_MAP = {
 };
 
 const TAB_TO_HASH = {
+  landing: '#landing',
   command: '#command',
   catalog: '#campuses',
   codex: '#codex'
@@ -27,11 +32,12 @@ const TAB_TO_HASH = {
 export default function App() {
   const [activeTab, setActiveTab] = useState(() => {
     const hash = window.location.hash.toLowerCase();
-    return HASH_MAP[hash] || 'command';
+    return HASH_MAP[hash] || 'landing';
   });
   const [isMethodologyOpen, setIsMethodologyOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedFacility, setSelectedFacility] = useState(null);
+  const [tourSelectedState, setTourSelectedState] = useState(null);
   const [initialConsoleTab, setInitialConsoleTab] = useState(() => {
     const hash = window.location.hash.toLowerCase();
     if (hash === '#water') return 'water';
@@ -150,6 +156,30 @@ export default function App() {
 
       {/* Main Content Viewport */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {activeTab === 'landing' && (
+          <LandingPage
+            onNavigateToCommand={(stateName) => {
+              if (stateName) {
+                setTourSelectedState(stateName);
+              }
+              setActiveTab('command');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onNavigateToMap={() => {
+              setActiveTab('command');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onNavigateToSimulator={() => {
+              setActiveTab('command');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onNavigateToCatalog={() => {
+              setActiveTab('catalog');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
         {activeTab === 'command' && (
           <UnifiedCommandCenter
             onOpenCodex={() => setIsMethodologyOpen(true)}
@@ -157,6 +187,7 @@ export default function App() {
               exportPDFHandlerRef.current = fn;
             }}
             initialFacility={selectedFacility}
+            initialState={tourSelectedState}
             initialConsoleTab={initialConsoleTab}
           />
         )}
@@ -208,6 +239,13 @@ export default function App() {
             </div>
 
             <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-600 dark:text-slate-300">
+              <button
+                onClick={() => handleTabChange('landing')}
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition font-semibold"
+              >
+                Overview & 3D Tour
+              </button>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
               <button
                 onClick={() => handleTabChange('command')}
                 className="hover:text-emerald-700 dark:hover:text-emerald-400 transition font-semibold"

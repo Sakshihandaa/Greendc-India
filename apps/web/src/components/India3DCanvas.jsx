@@ -31,10 +31,12 @@ const RENEWABLE_HUBS = [
 export const CAMERA_PRESETS = [
   { id: 'cinematic', label: 'Cinematic Orbit', eye: [0, 16, 21], target: [0, 0, 0] },
   { id: 'overview', label: 'Tactical Overview', eye: [0, 24, 4], target: [0, 0, -0.5] },
+  { id: 'rajasthan', label: 'Solar Capital (Rajasthan 2.2 GW)', eye: [-4.2, 9.5, -2.8], target: [-4.0, 0, -2.5] },
+  { id: 'gujarat', label: 'Renewable Belt (GIFT / Kutch)', eye: [-6.5, 8.5, 2.5], target: [-5.2, 0, -0.4] },
   { id: 'mumbai', label: 'West Corridor (Mumbai 155 MW)', eye: [-4.5, 7.5, 6.5], target: [-4.2, 0, 1.8] },
-  { id: 'ncr', label: 'North Corridor (NCR 78 MW)', eye: [-0.6, 7.5, -4.5], target: [-2.2, 0, -3.2] },
   { id: 'south', label: 'South Triangle (BLR-CHE-HYD)', eye: [1.8, 8.5, 9.5], target: [0, 0, 4.5] },
-  { id: 'gujarat', label: 'Renewable Belt (GIFT / Kutch)', eye: [-6.5, 8.5, 2.5], target: [-5.2, 0, -0.4] }
+  { id: 'ncr', label: 'North Corridor (NCR 78 MW)', eye: [-0.6, 7.5, -4.5], target: [-2.2, 0, -3.2] },
+  { id: 'himachal', label: 'Cold Hydro AI Edge (HP PUE 1.15)', eye: [-1.8, 8.0, -6.5], target: [-2.0, 0, -4.8] }
 ];
 
 export default function India3DCanvas({

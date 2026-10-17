@@ -1061,22 +1061,22 @@ export function getChoroplethColor(stateName, metricType = 'suitability', isDark
     return isDark ? '#1e293b' : '#e2e8f0';
   }
 
-  // 1. DC Siting Suitability Layer (Vibrant Multi-Chromatic Palette)
+  // 1. DC Siting Suitability Layer (Balanced, Elegant Cartographic Palette)
   if (metricType === 'suitability') {
     const score = data.greenSuitabilityScore || 80;
     if (isDark) {
-      if (score >= 90) return '#059669'; // Tier-1 Clean Megahubs (Emerald)
-      if (score >= 86) return '#0891b2'; // Clean Energy & Hydro Leaders (Cyan)
-      if (score >= 82) return '#2563eb'; // Emerging Solar Corridors (Royal Blue)
-      if (score >= 78) return '#d97706'; // Industrial & Transition Hubs (Amber)
-      if (score >= 74) return '#7c3aed'; // Frontier Regions (Purple)
-      return '#475569';
+      if (score >= 90) return '#059669'; // Tier-1 Clean Megahubs (Refined Emerald)
+      if (score >= 86) return '#0d9488'; // Clean Energy & Hydro Leaders (Marine Teal)
+      if (score >= 82) return '#0284c7'; // Emerging Solar Corridors (Slate Cyan)
+      if (score >= 78) return '#b45309'; // Industrial & Transition Hubs (Muted Amber)
+      if (score >= 74) return '#6d28d9'; // Frontier Regions (Muted Slate Violet)
+      return '#334155';
     } else {
-      if (score >= 90) return '#10b981'; // Tier-1 Clean Megahubs (Vivid Emerald Green)
-      if (score >= 86) return '#06b6d4'; // Clean Energy & Hydro Leaders (Vivid Cyan)
-      if (score >= 82) return '#3b82f6'; // Emerging Solar Corridors (Vivid Royal Blue)
-      if (score >= 78) return '#f59e0b'; // Industrial & Transition Hubs (Vivid Amber Orange)
-      if (score >= 74) return '#8b5cf6'; // Frontier Regions (Vivid Purple)
+      if (score >= 90) return '#10b981'; // Tier-1 Clean Megahubs (Balanced Emerald)
+      if (score >= 86) return '#14b8a6'; // Clean Energy & Hydro Leaders (Balanced Teal)
+      if (score >= 82) return '#38bdf8'; // Emerging Solar Corridors (Balanced Sky Cyan)
+      if (score >= 78) return '#f59e0b'; // Industrial & Transition Hubs (Warm Muted Amber)
+      if (score >= 74) return '#a78bfa'; // Frontier Regions (Soft Slate Lavender)
       return '#cbd5e1';
     }
   }
@@ -1087,15 +1087,15 @@ export function getChoroplethColor(stateName, metricType = 'suitability', isDark
     if (isDark) {
       if (re >= 70) return '#059669'; // Ultra RE Hydro/Solar (Deep Emerald)
       if (re >= 50) return '#0d9488'; // High RE (Teal)
-      if (re >= 35) return '#d97706'; // Moderate RE (Amber)
-      if (re >= 20) return '#e11d48'; // Low RE (Rose)
-      return '#475569';
+      if (re >= 35) return '#b45309'; // Moderate RE (Amber)
+      if (re >= 20) return '#be123c'; // Low RE (Rose)
+      return '#334155';
     } else {
-      if (re >= 70) return '#10b981'; // Ultra RE Hydro/Solar (Vivid Green)
-      if (re >= 50) return '#14b8a6'; // High RE (Bright Teal)
+      if (re >= 70) return '#10b981'; // Ultra RE Hydro/Solar (Clean Green)
+      if (re >= 50) return '#2dd4bf'; // High RE (Muted Teal)
       if (re >= 35) return '#f59e0b'; // Moderate RE (Golden Amber)
-      if (re >= 20) return '#f43f5e'; // Low RE (Vivid Rose)
-      return '#fb7185';
+      if (re >= 20) return '#fb7185'; // Low RE (Soft Rose)
+      return '#fecdd3';
     }
   }
 
@@ -1103,15 +1103,15 @@ export function getChoroplethColor(stateName, metricType = 'suitability', isDark
   if (metricType === 'waterStress') {
     const stress = data.waterStress;
     if (isDark) {
-      if (stress === 'Critical') return '#ef4444'; // Critical Overexploited (Red)
-      if (stress === 'High') return '#f97316';     // High Stress (Orange)
-      if (stress === 'Moderate') return '#eab308'; // Moderate (Yellow)
-      return '#10b981';                            // Safe Basins (Green)
+      if (stress === 'Critical') return '#e11d48'; // Critical Overexploited (Rose-Red)
+      if (stress === 'High') return '#ea580c';     // High Stress (Orange)
+      if (stress === 'Moderate') return '#d97706'; // Moderate (Amber)
+      return '#059669';                            // Safe Basins (Emerald)
     } else {
-      if (stress === 'Critical') return '#ef4444'; // Critical (Vivid Red)
-      if (stress === 'High') return '#f97316';     // High (Vivid Orange)
-      if (stress === 'Moderate') return '#eab308'; // Moderate (Vivid Golden Yellow)
-      return '#10b981';                            // Safe (Bright Green)
+      if (stress === 'Critical') return '#f43f5e'; // Critical (Balanced Rose Red)
+      if (stress === 'High') return '#f97316';     // High (Warm Orange)
+      if (stress === 'Moderate') return '#eab308'; // Moderate (Warm Yellow)
+      return '#10b981';                            // Safe (Clean Green)
     }
   }
 
@@ -1121,13 +1121,13 @@ export function getChoroplethColor(stateName, metricType = 'suitability', isDark
     if (isDark) {
       if (carbon < 300) return '#059669'; // Mountain Hydro (<0.30 kg)
       if (carbon < 550) return '#0284c7'; // High Clean Mix (<0.55 kg)
-      if (carbon < 720) return '#d97706'; // National Baseline (<0.72 kg)
-      return '#e11d48';                   // Coal Heavy (>0.72 kg)
+      if (carbon < 720) return '#b45309'; // National Baseline (<0.72 kg)
+      return '#be123c';                   // Coal Heavy (>0.72 kg)
     } else {
       if (carbon < 300) return '#10b981'; // Mountain Hydro (Emerald)
       if (carbon < 550) return '#0284c7'; // High Clean Mix (Sky/Navy Blue)
       if (carbon < 720) return '#f59e0b'; // National Baseline (Amber)
-      return '#ef4444';                   // Coal Heavy (Rose-Red)
+      return '#f43f5e';                   // Coal Heavy (Rose-Red)
     }
   }
 
