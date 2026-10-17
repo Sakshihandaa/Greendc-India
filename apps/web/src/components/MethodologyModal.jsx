@@ -1,120 +1,201 @@
-import React from 'react';
-import { X, BookOpen, ExternalLink, ShieldCheck, CheckCircle2, AlertTriangle, Layers } from 'lucide-react';
+import React, { useEffect } from 'react';
+import {
+  X,
+  BookOpen,
+  CheckCircle2,
+  AlertTriangle,
+  ShieldCheck,
+  Zap,
+  Droplets,
+  Layers,
+  Building2,
+  FileCheck,
+  Scale,
+  HelpCircle,
+  ExternalLink,
+  Code2,
+  Bookmark
+} from 'lucide-react';
 
 export default function MethodologyModal({ isOpen, onClose }) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    window.history.pushState({ modalOpen: true }, '');
+    const handlePopState = () => {
+      onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-3xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm overflow-y-auto animate-fadeIn select-none">
+      <div 
+        className="bg-white border border-slate-200 rounded-3xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh] text-slate-800"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Modal Header */}
-        <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-emerald-950 rounded-xl border border-emerald-800">
-              <BookOpen className="w-5 h-5 text-emerald-400" />
+        <div className="px-6 py-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-emerald-100 rounded-2xl border border-emerald-200 text-emerald-800">
+              <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white tracking-tight">
-                Methodology, Formulas & Data Provenance
+              <h3 className="text-xl font-black text-slate-900 tracking-tight font-heading">
+                Methodology, Physics Formulas & Data Codex
               </h3>
-              <p className="text-xs text-slate-400">GreenDC India Technical Documentation & PRD Standards</p>
+              <p className="text-xs text-slate-500">
+                GreenDC India Research Documentation & Mathematical Specifications
+              </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition"
+            className="text-slate-400 hover:text-slate-700 p-2 rounded-xl hover:bg-slate-200 transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Content */}
-        <div className="p-6 overflow-y-auto space-y-6 text-xs text-slate-300 leading-relaxed">
-          {/* Research Context & Disclaimer */}
-          <div className="bg-emerald-950/30 border border-emerald-800/50 p-4 rounded-2xl space-y-1.5">
-            <h4 className="font-bold text-emerald-300 text-sm flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" /> Research Prototype Scope (PRD Section 1)
-            </h4>
-            <p className="text-slate-300">
-              GreenDC India is an educational/research decision-support platform exploring the sustainability implications of AI data-centre infrastructure in India. It is not an official site-selection, engineering design, or environmental-clearance tool.
+        <div className="p-6 overflow-y-auto space-y-6 text-xs text-slate-700 leading-relaxed">
+          {/* Research Context & Scope Notice */}
+          <div className="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl space-y-2">
+            <div className="flex items-center gap-2 text-emerald-800 font-bold text-sm">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" /> Academic & Decision-Support Scope
+            </div>
+            <p className="text-slate-700 leading-relaxed">
+              GreenDC India is an educational and policy decision-support platform designed to model the energy, water, and spatial constraints of AI compute clusters across India. It provides explainable, reproducible calculations rather than proprietary black-box outputs. It is not an official regulatory clearance or civil engineering blueprint.
             </p>
           </div>
 
-          {/* Formulas */}
-          <div className="space-y-3">
-            <h4 className="font-bold text-white text-sm uppercase tracking-wider">
-              1. Deterministic Calculation Formulas (FR-03 to FR-05)
+          {/* Core Mathematical Formulations */}
+          <div className="space-y-4">
+            <h4 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 font-heading">
+              <Code2 className="w-4 h-4 text-emerald-600" />
+              1. Deterministic Calculation Rules (FR-03 to FR-05)
             </h4>
-            <div className="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px]">
-              <div>
-                <strong className="text-emerald-400">Facility Power (MW):</strong>
-                <span className="text-slate-300 ml-2">IT Load (MW) × PUE</span>
-              </div>
-              <div>
-                <strong className="text-emerald-400">Annual IT Energy (kWh/year):</strong>
-                <span className="text-slate-300 ml-2">IT Load (MW) × 1,000 × 8,760 × Utilisation</span>
-              </div>
-              <div>
-                <strong className="text-emerald-400">Annual Facility Energy (kWh/year):</strong>
-                <span className="text-slate-300 ml-2">IT Load (MW) × 1,000 × PUE × 8,760 × Utilisation</span>
-              </div>
-              <div>
-                <strong className="text-emerald-400">Renewable-Equivalent Energy (kWh/year):</strong>
-                <span className="text-slate-300 ml-2">Annual Facility Energy × Renewable Share</span>
-                <p className="text-[10px] text-amber-300/80 font-sans mt-0.5">
-                  * Note: Scenario estimate only. Does not indicate verified physical green electron matching.
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              {/* Facility Power */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 font-mono">
+                  Facility Power (MW)
+                </span>
+                <div className="font-mono text-sm text-slate-900 font-extrabold bg-white p-2.5 rounded-xl border border-slate-200 shadow-xs">
+                  P_facility = P_IT × PUE
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  Where P_IT is the commissioned IT payload in megawatts, and PUE is Power Usage Effectiveness (≥ 1.0).
                 </p>
               </div>
-              <div>
-                <strong className="text-cyan-400">Estimated Water Consumption (Litres/year):</strong>
-                <span className="text-slate-300 ml-2">Annual IT Energy (kWh) × WUE (L/kWh IT energy)</span>
+
+              {/* Annual IT Energy */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-800 font-mono">
+                  Annual IT Energy (kWh/year)
+                </span>
+                <div className="font-mono text-sm text-slate-900 font-extrabold bg-white p-2.5 rounded-xl border border-slate-200 shadow-xs">
+                  E_IT = P_IT × 1,000 × 8,760 × Utilisation
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  8,760 hours/year; utilisation represents the average annual capacity factor (0.0 to 1.0).
+                </p>
               </div>
-              <div>
-                <strong className="text-cyan-400">Estimated Water Consumption (ML/year):</strong>
-                <span className="text-slate-300 ml-2">Estimated Water (Litres) ÷ 1,000,000</span>
+
+              {/* Annual Facility Energy */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-800 font-mono">
+                  Annual Facility Energy (kWh/year)
+                </span>
+                <div className="font-mono text-sm text-slate-900 font-extrabold bg-white p-2.5 rounded-xl border border-slate-200 shadow-xs">
+                  E_facility = E_IT × PUE
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  Total grid and on-site generation draw, including cooling, UPS losses, switchgear, and auxiliary power.
+                </p>
+              </div>
+
+              {/* Water Consumption */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-sky-800 font-mono">
+                  Cooling Water Consumption (Litres/year)
+                </span>
+                <div className="font-mono text-sm text-slate-900 font-extrabold bg-white p-2.5 rounded-xl border border-slate-200 shadow-xs">
+                  W_annual = E_IT × WUE
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  WUE is in Litres per kWh of IT energy. Converted to Megalitres (ML) by dividing by 1,000,000.
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Missing Data Policy */}
-          <div className="space-y-2">
-            <h4 className="font-bold text-white text-sm uppercase tracking-wider">
-              2. Missing-Data Policy (FR-08)
+          {/* Missing-Data Integrity Policy */}
+          <div className="bg-amber-50/60 border border-amber-200 p-5 rounded-2xl space-y-2">
+            <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
+              <Bookmark className="w-4 h-4 text-amber-600" />
+              2. Scientific Missing-Data Rule (FR-08)
             </h4>
-            <p>
-              GreenDC India adheres strictly to a transparent missing-data rule: unavailable or undisclosed data is preserved as <span className="text-slate-200 font-mono">null / unavailable</span>. It is never silently replaced with zero or a favourable dummy score.
+            <p className="leading-relaxed text-slate-700">
+              When an operator does not explicitly publish water metrics or rack counts, GreenDC treats the field as <strong className="text-slate-900 font-mono">null (Unavailable)</strong>. GreenDC never assumes missing disclosures to be zero or imputes favorable defaults. This ensures corporate environmental transparency is accurately captured.
             </p>
           </div>
 
           {/* Data Sources and Provenance */}
-          <div className="space-y-2">
-            <h4 className="font-bold text-white text-sm uppercase tracking-wider">
-              3. Data Sources & Provenance
+          <div className="space-y-3">
+            <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 font-heading">
+              <FileCheck className="w-4 h-4 text-emerald-600" />
+              3. Verifiable Data Sources & Citations
             </h4>
-            <ul className="space-y-2 list-disc pl-4 text-slate-300">
-              <li>
-                <strong>Power & Renewable Energy:</strong> Central Electricity Authority (CEA) Executive Summary and State-wise Renewable Generation Reports (2023–2024).
-              </li>
-              <li>
-                <strong>Water Vulnerability:</strong> Central Ground Water Board (CGWB) Dynamic Ground Water Resources Assessment & NITI Aayog Composite Water Management Index (CWMI).
-              </li>
-              <li>
-                <strong>Facility Disclosures:</strong> Official corporate press releases and Uptime Institute Tier IV certifications from Yotta Infrastructure, CtrlS Datacenters, AdaniConneX, NTT GDC, and Equinix India.
-              </li>
-              <li>
-                <strong>Geographical Boundaries:</strong> Simplified India State boundaries derived from DataMeet / OpenStreetMap under open license.
-              </li>
-            </ul>
+            <div className="space-y-2">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <strong className="text-slate-900 block font-semibold">Power Grid & Renewable Penetration:</strong>
+                <span className="text-slate-600 text-[11px]">
+                  Central Electricity Authority (CEA) Ministry of Power — Monthly Generation & Installed Capacity Reports (2023–2024), CO2 Baseline Database for the Indian Power Sector v19.
+                </span>
+              </div>
+
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <strong className="text-slate-900 block font-semibold">Hydrological Stress & Aquifer Depletion:</strong>
+                <span className="text-slate-600 text-[11px]">
+                  Central Ground Water Board (CGWB) Dynamic Ground Water Resources of India & NITI Aayog Composite Water Management Index (CWMI).
+                </span>
+              </div>
+
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <strong className="text-slate-900 block font-semibold">Facility Capacities & Phase Disclosures:</strong>
+                <span className="text-slate-600 text-[11px]">
+                  Public corporate announcements, Uptime Institute Tier IV certifications, and state industrial development corporation (MIDC, UPSIDA, SIPCOT) land allotments.
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-4 bg-slate-950 border-t border-slate-800 flex justify-end">
+        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+          <span className="text-[11px] text-slate-500 font-medium">
+            Open Data Commons • Transparent Mathematics
+          </span>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold transition"
+            className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm shadow-emerald-600/20"
           >
-            Close Documentation
+            Done
           </button>
         </div>
       </div>
